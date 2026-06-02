@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department of Case Assembly – Operational Dashboard</title>
+  <meta name="description"
+    content="Daily Operational Dashboard for the Assembly Department – Production and Quality KPIs, powered by live Excel data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <style>
+    /* ══════════════════════════════════════════════════
+       DESIGN TOKENS – DARK THEME (default)
+    ══════════════════════════════════════════════════ */
+    :root,
+    [data-theme="dark"] {
+      --bg-base: #0a0d14;
+      --bg-surface: #111827;
+      --bg-card: #151d2e;
+      --bg-card-hover: #1a2540;
+      --border: rgba(99, 130, 255, 0.15);
+      --border-bright: rgba(99, 130, 255, 0.4);
+
+      --accent-blue: #4f8ef7;
+      --accent-cyan: #22d3ee;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --accent-teal: #14b8a6;
+
+      --text-primary: #f0f4ff;
+      --text-secondary: #8b9fc4;
+      --text-muted: #4a5a7a;
+
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(99, 130, 255, 0.08) inset;
+      --shadow-glow: 0 0 40px rgba(79, 142, 247, 0.15);
+
+      --chart-grid: rgba(99, 130, 255, 0.08);
+      --chart-tick: #8b9fc4;
+      --tooltip-bg: rgba(17, 24, 39, 0.97);
+      --tooltip-border: rgba(99, 130, 255, 0.25);
+
+      --header-bg: rgba(10, 13, 20, 0.94);
+      --filter-bg: rgba(17, 24, 39, 0.96);
+
+      --bg-grid-color: rgba(79, 142, 247, 0.04);
+      --bg-glow-opacity: 0.12;
+
+      /* Component-specific */
+      --kpi-icon-opacity: 0.14;
+      --card-shine: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+      --chart-shine: linear-gradient(160deg, rgba(255, 255, 255, 0.025) 0%, transparent 50%);
+      --track-bg: rgba(99, 130, 255, 0.10);
+      --badge-up-bg: rgba(16, 185, 129, 0.15);
+      --badge-dn-bg: rgba(239, 68, 68, 0.15);
+      --badge-nt-bg: rgba(79, 142, 247, 0.12);
+      --row-hover: rgba(79, 142, 247, 0.04);
+      --note-bg: rgba(79, 142, 247, 0.08);
+      --note-border: rgba(79, 142, 247, 0.22);
+      --sep-color: rgba(99, 130, 255, 0.15);
+      --th-bg: #151d2e;
+    }
+
+    /* ══════════════════════════════════════════════════
+       DESIGN TOKENS – LIGHT THEME (fully redesigned)
+    ══════════════════════════════════════════════════ */
+    [data-theme="light"] {
+      --bg-base: #eef2ff;
+      --bg-surface: #f8faff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5ff;
+      --border: rgba(99, 122, 255, 0.22);
+      --border-bright: rgba(37, 99, 235, 0.55);
+
+      --accent-blue: #1d4ed8;
+      --accent-cyan: #0284c7;
+      --accent-green: #047857;
+      --accent-amber: #b45309;
+      --accent-red: #b91c1c;
+      --accent-purple: #6d28d9;
+      --accent-teal: #0f766e;
+
+      --text-primary: #000000;
+      --text-secondary: #0f172a;
+      --text-muted: #334155;
+
+      --shadow-card: 0 2px 12px rgba(37, 99, 235, 0.10), 0 1px 3px rgba(0, 0, 0, 0.07);
+      --shadow-glow: 0 0 32px rgba(37, 99, 235, 0.12);
+
+      --chart-grid: rgba(37, 99, 235, 0.10);
+      --chart-tick: #1e293b;
+      --tooltip-bg: rgba(255, 255, 255, 0.99);
+      --tooltip-border: rgba(37, 99, 235, 0.30);
+
+      --header-bg: rgba(255, 255, 255, 0.97);
+      --filter-bg: rgba(248, 250, 255, 0.98);
+
+      --bg-grid-color: rgba(37, 99, 235, 0.07);
+      --bg-glow-opacity: 0.08;
+
+      --kpi-icon-opacity: 0.65;
+      --card-shine: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(240, 245, 255, 0.40) 60%);
+      --chart-shine: linear-gradient(160deg, rgba(255, 255, 255, 0.80) 0%, rgba(240, 245, 255, 0.20) 60%);
+      --track-bg: rgba(37, 99, 235, 0.12);
+      --badge-up-bg: rgba(4, 120, 87, 0.12);
+      --badge-dn-bg: rgba(185, 28, 28, 0.12);
+      --badge-nt-bg: rgba(29, 78, 216, 0.10);
+      --row-hover: rgba(37, 99, 235, 0.06);
+      --note-bg: rgba(29, 78, 216, 0.07);
+      --note-border: rgba(29, 78, 216, 0.25);
+      --sep-color: rgba(37, 99, 235, 0.18);
+      --th-bg: #f0f5ff;
+    }
+
+    /* ══════════════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    select {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════════════
+       ANIMATED BACKGROUND
+    ══════════════════════════════════════════════════ */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--bg-grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid-color) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: var(--bg-glow-opacity);
+    }
+
+    .bg-glow-1 {
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      left: -200px;
+      background: #4f8ef7;
+    }
+
+    .bg-glow-2 {
+      width: 500px;
+      height: 500px;
+      bottom: -100px;
+      right: -100px;
+      background: #a855f7;
+    }
+
+    .bg-glow-3 {
+      width: 400px;
+      height: 400px;
+      top: 40%;
+      left: 50%;
+      background: #22d3ee;
+      opacity: calc(var(--bg-glow-opacity)*0.6);
+    }
+
+    /* ══════════════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════════════ */
+    #app {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════════════ */
+    header {
+      background: var(--header-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1.5px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    [data-theme="light"] header {
+      box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 4px 16px rgba(79, 142, 247, 0.35);
+      flex-shrink: 0;
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-main {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+    }
+
+    .header-sub {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, .7);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+    }
+
+    .clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Theme Toggle ── */
+    .theme-toggle {
+      width: 56px;
+      height: 30px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-bright);
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle-knob {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      position: absolute;
+      left: 2px;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    [data-theme="light"] .theme-toggle-knob {
+      transform: translateX(26px);
+    }
+
+    .theme-toggle-icon-dark,
+    .theme-toggle-icon-light {
+      position: absolute;
+      font-size: 11px;
+    }
+
+    .theme-toggle-icon-dark {
+      right: 4px;
+    }
+
+    .theme-toggle-icon-light {
+      left: 4px;
+    }
+
+    .btn-refresh {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 2px solid var(--border-bright);
+      background: rgba(79, 142, 247, 0.10);
+      color: var(--accent-blue);
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    [data-theme="light"] .btn-refresh {
+      background: rgba(29, 78, 216, 0.08);
+      color: var(--accent-blue);
+    }
+
+    .btn-refresh:hover {
+      background: rgba(79, 142, 247, 0.22);
+    }
+
+    [data-theme="light"] .btn-refresh:hover {
+      background: rgba(29, 78, 216, 0.15);
+    }
+
+    .btn-refresh.spinning svg {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       FILTER BAR
+    ══════════════════════════════════════════════════ */
+    .filter-bar {
+      background: var(--filter-bg);
+      backdrop-filter: blur(16px);
+      border-bottom: 1.5px solid var(--border);
+      padding: 14px 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      position: sticky;
+      top: 72px;
+      z-index: 99;
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    [data-theme="light"] .filter-bar {
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .filter-select {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 8px 32px 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f8ef7' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      min-width: 160px;
+      transition: all 0.2s;
+    }
+
+    [data-theme="light"] .filter-select {
+      border-color: rgba(37, 99, 235, 0.30);
+      background-color: #ffffff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231d4ed8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+    }
+
+    .filter-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .filter-date-mode {
+      display: flex;
+    }
+
+    .filter-date-btn {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      border-radius: 8px;
+    }
+
+    [data-theme="light"] .filter-date-btn {
+      border-color: rgba(37, 99, 235, 0.25);
+      color: #334155;
+    }
+
+    .filter-date-btn.active {
+      background: rgba(79, 142, 247, 0.15);
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+
+    [data-theme="light"] .filter-date-btn.active {
+      background: rgba(29, 78, 216, 0.10);
+      color: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+
+    .filter-select.active {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+      background-color: rgba(79, 142, 247, 0.05);
+    }
+
+    [data-theme="light"] .filter-select.active {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+      background-color: rgba(29, 78, 216, 0.04);
+    }
+
+    .filter-date-input {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      display: none;
+    }
+
+    [data-theme="light"] .filter-date-input {
+      border-color: rgba(37, 99, 235, 0.30);
+    }
+
+    .filter-date-input.visible {
+      display: block;
+    }
+
+    .filter-date-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .filter-separator {
+      width: 1px;
+      height: 28px;
+      background: var(--sep-color);
+    }
+
+    /* ══════════════════════════════════════════════════
+       TAB BAR
+    ══════════════════════════════════════════════════ */
+    .tab-bar {
+      display: flex;
+      padding: 20px 32px 0;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--header-bg);
+      transition: background 0.35s, border-color 0.35s;
+    }
+
+    .tab-btn {
+      padding: 12px 30px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 700;
+      position: relative;
+      transition: all 0.25s;
+      border-bottom: 3px solid transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--text-primary);
+    }
+
+    .tab-icon {
+      margin-right: 8px;
+      font-size: 15px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       MAIN & PANELS
+    ══════════════════════════════════════════════════ */
+    main {
+      flex: 1;
+      padding: 28px 32px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       SECTION HEADERS
+    ══════════════════════════════════════════════════ */
+    .section-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      padding-left: 2px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1.5px;
+      background: var(--border);
+    }
+
+    /* ══════════════════════════════════════════════════
+       KPI CARDS
+    ══════════════════════════════════════════════════ */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--card-shine), var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-card);
+    }
+
+    .kpi-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+
+    .kpi-card-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .kpi-value {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .kpi-icon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 28px;
+      opacity: var(--kpi-icon-opacity);
+    }
+
+    .kpi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .kpi-badge.up {
+      background: var(--badge-up-bg);
+      color: var(--accent-green);
+    }
+
+    .kpi-badge.down {
+      background: var(--badge-dn-bg);
+      color: var(--accent-red);
+    }
+
+    .kpi-badge.neutral {
+      background: var(--badge-nt-bg);
+      color: var(--accent-blue);
+    }
+
+    /* ══════════════════════════════════════════════════
+       CHART CARDS
+    ══════════════════════════════════════════════════ */
+    .chart-grid {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .chart-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .chart-grid-3 {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+
+    .chart-card {
+      background: var(--chart-shine), var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-card:hover {
+      border-color: var(--border-bright);
+    }
+
+    .chart-card-full {
+      grid-column: 1 / -1;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .chart-wrap {
+      position: relative;
+    }
+
+    /* ══════════════════════════════════════════════════
+       DATA NOTE / BANNER
+    ══════════════════════════════════════════════════ */
+    .data-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--note-bg);
+      border: 1.5px solid var(--note-border);
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .data-note-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .data-note strong {
+      color: var(--text-primary);
+      font-weight: 800;
+    }
+
+    /* ══════════════════════════════════════════════════
+       CAPACITY BARS
+    ══════════════════════════════════════════════════ */
+    .capacity-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .cap-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cap-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .cap-row-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .cap-row-vals {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    .cap-row-pct {
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .cap-track {
+      height: 10px;
+      background: var(--track-bg);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .cap-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ══════════════════════════════════════════════════
+       FLOW SUMMARY STATS
+    ══════════════════════════════════════════════════ */
+    .flow-summary {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .flow-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .flow-stat-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .flow-stat-value {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .flow-divider {
+      width: 1px;
+      background: var(--sep-color);
+      align-self: stretch;
+    }
+
+    /* ══════════════════════════════════════════════════
+       QUALITY METRICS
+    ══════════════════════════════════════════════════ */
+    .quality-hero {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .fta-dial-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+      gap: 4px;
+    }
+
+    .fta-pct-big {
+      font-size: 50px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .fta-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .quality-kpis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       TABLE
+    ══════════════════════════════════════════════════ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1.5px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(79, 142, 247, 0.04);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════════════════
+       LOADING
+    ══════════════════════════════════════════════════ */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity 0.5s;
+    }
+
+    #loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-ring {
+      width: 56px;
+      height: 56px;
+      border: 3px solid rgba(79, 142, 247, 0.2);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .loader-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .loader-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ══════════════════════════════════════════════════
+       UTILITIES
+    ══════════════════════════════════════════════════ */
+    .mb-24 {
+      margin-bottom: 24px;
+    }
+
+    .text-blue {
+      color: var(--accent-blue) !important;
+    }
+
+    .text-cyan {
+      color: var(--accent-cyan) !important;
+    }
+
+    .text-green {
+      color: var(--accent-green) !important;
+    }
+
+    .text-amber {
+      color: var(--accent-amber) !important;
+    }
+
+    .text-red {
+      color: var(--accent-red) !important;
+    }
+
+    .text-purple {
+      color: var(--accent-purple) !important;
+    }
+
+    .animate-in {
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════ */
+    @media(max-width:1200px) {
+      .chart-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:768px) {
+
+      header,
+      .filter-bar,
+      main {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .tab-bar {
+        padding: 16px 16px 0;
+        overflow-x: auto;
+      }
+
+      .quality-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .quality-kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .header-sub {
+        font-size: 14px;
+      }
+
+      .clock {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loading -->
+  <div id="loading-overlay">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Loading Dashboard</div>
+    <div class="loader-sub">Reading D:\Dasboard_Data.xlsx…</div>
+  </div>
+
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div id="app">
+
+    <!-- ══ HEADER ══ -->
+    <header>
+      <div class="header-left">
+        <div class="header-logo">⚙</div>
+        <div class="header-titles">
+          <span class="header-main">Dashboard</span>
+          <span class="header-sub">Department of Case Assembly</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="live-indicator">
+          <div class="live-dot"></div>LIVE
+        </div>
+        <span class="clock" id="clock-display"></span>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle light/dark theme"
+          aria-label="Toggle theme">
+          <span class="theme-toggle-icon-light">☀️</span>
+          <span class="theme-toggle-icon-dark">🌙</span>
+          <div class="theme-toggle-knob">
+            <span id="theme-knob-icon">🌙</span>
+          </div>
+        </button>
+
+        <button class="btn-refresh" id="btn-refresh" onclick="refreshData()">
+          <svg id="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            style="display:inline;vertical-align:middle;margin-right:6px">
+            <path d="M23 4v6h-6M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- ══ FILTER BAR ══ -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">📅 Date</span>
+        <div class="filter-date-mode" style="display: flex; gap: 8px; align-items: center;">
+          <select id="month-picker" class="filter-select" onchange="setDateMode('month')" style="min-width: 150px; border-radius: 8px; padding-top: 6px; padding-bottom: 6px;">
+            <option value="month">Overall Month</option>
+          </select>
+          <button class="filter-date-btn" id="btn-specific" onclick="setDateMode('specific')" style="border-radius: 8px; height: 34px; padding: 0 16px;">Specific Date</button>
+        </div>
+        <input type="date" id="date-picker" class="filter-date-input" onchange="applyFilters()" />
+      </div>
+      <div class="filter-separator"></div>
+      <div class="filter-group">
+        <span class="filter-label">🔄 Shift</span>
+        <select id="shift-filter" class="filter-select" onchange="applyFilters()">
+          <option value="all">All Shifts</option>
+          <option value="general">General</option>
+          <option value="1">Shift 1</option>
+          <option value="2">Shift 2</option>
+        </select>
+      </div>
+      <div class="filter-separator"></div>
+      <div class="filter-group">
+        <span class="filter-label">🔧 Model</span>
+        <select id="model-filter" class="filter-select" onchange="applyFilters()">
+          <option value="all">All Models</option>
+        </select>
+      </div>
+      <div class="filter-separator"></div>
+      <div class="filter-group">
+        <span class="filter-label">👥 Group</span>
+        <select id="group-filter" class="filter-select" onchange="applyFilters()">
+          <option value="all">Overall</option>
+          <option value="A1">A1</option>
+          <option value="A2">A2</option>
+          <option value="A3">A3</option>
+          <option value="G1">G1</option>
+          <option value="G2">G2</option>
+          <option value="G3">G3</option>
+          <option value="G4">G4</option>
+          <option value="G5">G5</option>
+          <option value="G6">G6</option>
+          <option value="G7">G7</option>
+          <option value="G8">G8</option>
+          <option value="PED">PED</option>
+          <option value="PED-AUTO">PED-AUTO</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ══ TABS ══ -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-production" onclick="switchTab('production')">
+        <span class="tab-icon">🏭</span>Production
+      </button>
+      <button class="tab-btn" id="tab-quality" onclick="switchTab('quality')">
+        <span class="tab-icon">✅</span>Quality
+      </button>
+    </div>
+
+    <!-- ══ MAIN ══ -->
+    <main>
+
+      <!-- ════ TAB 1: PRODUCTION ════ -->
+      <div class="tab-panel active" id="panel-production">
+
+        <div class="section-title">Capacity Overview</div>
+        <div class="kpi-grid mb-24" id="capacity-kpis"></div>
+
+        <div class="chart-grid chart-grid-2 mb-24">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Production Target KPI</div>
+                <div class="chart-subtitle">Planned vs Actuals from Capacity Sheet</div>
+              </div>
+            </div>
+            <div class="capacity-bars" id="target-kpi-bars"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Group Capacity Detail</div>
+                <div class="chart-subtitle">Target, Actuals, Achievement % and Balance per group</div>
+              </div>
+            </div>
+            <div style="overflow-x:auto;max-height:320px;overflow-y:auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Capacity</th>
+                    <th>Target/Month</th>
+                    <th>Actuals</th>
+                    <th>Achiev%</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="capacity-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Production Rate (Flow)</div>
+
+        <!-- Data note explaining the flow chart -->
+        <div class="data-note" id="flow-data-note">
+          <span class="data-note-icon">ℹ️</span>
+          <span>
+            <strong>Production In</strong> = Target Till Date (planned production from Capacity Sheet) &nbsp;|&nbsp;
+            <strong>Production Out</strong> = Actual units produced (Actuals Qty from Capacity Sheet).
+            Both values come from the same authoritative capacity tracking sheet, ensuring a valid In vs Out comparison.
+          </span>
+        </div>
+
+        <div class="chart-card mb-24">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Production In vs Production Out</div>
+              <div class="chart-subtitle">Planned target (In) vs actual completed output (Out) — by group</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-blue)"></div>Production In (Target)
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-green)"></div>Production Out (Actual)
+              </div>
+            </div>
+          </div>
+          <div class="flow-summary" id="flow-summary"></div>
+          <div class="chart-wrap" style="height:300px">
+            <canvas id="flow-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="section-title">Groupwise Performance</div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Target vs Actual Production by Group</div>
+              <div class="chart-subtitle">Monthly target vs actual output — order-level data from Output sheet</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-blue)"></div>Monthly Target
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-green)"></div>Actual Output
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-amber)"></div>Target Till Date
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:340px">
+            <canvas id="groupwise-chart"></canvas>
+          </div>
+        </div>
+
+      </div><!-- /panel-production -->
+
+
+      <!-- ════ TAB 2: QUALITY ════ -->
+      <div class="tab-panel" id="panel-quality">
+
+        <div class="section-title">First Time Acceptance (FTA)</div>
+        <div class="quality-hero mb-24">
+          <div class="fta-dial-card">
+            <canvas id="fta-gauge" width="180" height="140"></canvas>
+            <div class="fta-pct-big" id="fta-overall">–%</div>
+            <div class="fta-label">FTA %</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Weighted average across all weeks</div>
+          </div>
+          <div class="quality-kpis">
+            <div class="kpi-card">
+              <div class="kpi-card-accent" style="background:var(--accent-green)"></div>
+              <div class="kpi-label">Total Accepted (ACC)</div>
+              <div class="kpi-value text-green" id="q-total-acc">–</div>
+              <div class="kpi-sub">Units passed inspection</div>
+              <div class="kpi-icon">✅</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-card-accent" style="background:var(--accent-red)"></div>
+              <div class="kpi-label">Total Rejection</div>
+              <div class="kpi-value text-red" id="q-total-rej">–</div>
+              <div class="kpi-sub">Lot inspection rejections</div>
+              <div class="kpi-icon">❌</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-card-accent" style="background:var(--accent-amber)"></div>
+              <div class="kpi-label">Total Rework</div>
+              <div class="kpi-value text-amber" id="q-total-rework">–</div>
+              <div class="kpi-sub">100% &amp; HE inspection rework</div>
+              <div class="kpi-icon">🔧</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-card-accent" style="background:var(--accent-purple)"></div>
+              <div class="kpi-label">Defect Rate</div>
+              <div class="kpi-value text-purple" id="q-defect-rate">–</div>
+              <div class="kpi-sub">Rejection ÷ (ACC + Rej) ×100</div>
+              <div class="kpi-icon">📉</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">FTA % by Group</div>
+        <div class="chart-card mb-24">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">First Time Acceptance % — Group Breakdown</div>
+              <div class="chart-subtitle">Average weighted FTA per assembly group (target ≥ 97%)</div>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary)">
+              Target <span style="color:var(--accent-green);font-weight:700">≥ 97%</span>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:300px">
+            <canvas id="fta-group-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="section-title">Rework &amp; Rejection by Group</div>
+        <div class="chart-grid chart-grid-2 mb-24">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Rejection by Group</div>
+                <div class="chart-subtitle">Units rejected at lot inspection</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:280px"><canvas id="rejection-chart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Rework by Group</div>
+                <div class="chart-subtitle">100% &amp; HE inspection rework units</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:280px"><canvas id="rework-chart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="section-title">Detailed Quality Breakdown</div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Quality Metrics by Group — Full Table</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Acceptance</th>
+                  <th>Rejection</th>
+                  <th>Rework</th>
+                  <th>FTA %</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="quality-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /panel-quality -->
+    </main>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════════════════
+       STATE
+    ══════════════════════════════════════════════════ */
+    const API = 'http://localhost:5050/api';
+    let dateMode = 'month';
+    let charts = {};
+    let currentTheme = localStorage.getItem('dashboard-theme') || 'dark';
+
+    // ── Apply stored theme on load ──
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeKnob();
+
+    /* ══════════════════════════════════════════════════
+       THEME TOGGLE
+    ══════════════════════════════════════════════════ */
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('dashboard-theme', currentTheme);
+      updateThemeKnob();
+      // Redraw charts with new colors
+      applyFilters();
+    }
+
+    function updateThemeKnob() {
+      const knob = document.getElementById('theme-knob-icon');
+      if (knob) knob.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    /* ══════════════════════════════════════════════════
+       CHART DEFAULTS (theme-aware)
+    ══════════════════════════════════════════════════ */
+    function getChartDefaults() {
+      const style = getComputedStyle(document.documentElement);
+      const isLight = currentTheme === 'light';
+      return {
+        gridColor: style.getPropertyValue('--chart-grid').trim() || (isLight ? 'rgba(37,99,235,0.10)' : 'rgba(99,130,255,0.08)'),
+        tickColor: style.getPropertyValue('--chart-tick').trim() || (isLight ? '#334155' : '#8b9fc4'),
+        tooltipBg: style.getPropertyValue('--tooltip-bg').trim() || (isLight ? 'rgba(255,255,255,0.99)' : 'rgba(17,24,39,0.97)'),
+        tooltipBorder: style.getPropertyValue('--tooltip-border').trim() || (isLight ? 'rgba(37,99,235,0.30)' : 'rgba(99,130,255,0.25)'),
+        textPrimary: style.getPropertyValue('--text-primary').trim() || (isLight ? '#0f172a' : '#f0f4ff')
+      };
+    }
+
+    function chartOptions({ yLabel = '', yMin, yMax } = {}) {
+      const c = getChartDefaults();
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          datalabels: { display: false },
+          tooltip: {
+            backgroundColor: c.tooltipBg,
+            borderColor: c.tooltipBorder,
+            borderWidth: 1,
+            titleColor: c.textPrimary,
+            bodyColor: c.tickColor,
+            padding: 12, cornerRadius: 10,
+            displayColors: true, boxPadding: 6,
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${Math.round(ctx.parsed.y ?? ctx.parsed.x ?? 0).toLocaleString()}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: c.tickColor, font: { size: 11 } },
+            grid: { color: c.gridColor },
+            border: { color: 'transparent' }
+          },
+          y: {
+            ticks: { color: c.tickColor, font: { size: 11 }, callback: v => v >= 1000 ? (v / 1000).toFixed(1) + 'K' : v },
+            grid: { color: c.gridColor },
+            border: { color: 'transparent' },
+            title: { display: !!yLabel, text: yLabel, color: c.tickColor, font: { size: 11 } },
+            min: yMin, max: yMax
+          }
+        }
+      };
+    }
+
+    /* ══════════════════════════════════════════════════
+       CLOCK
+    ══════════════════════════════════════════════════ */
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock-display').textContent =
+        now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) +
+        ' · ' + now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* ══════════════════════════════════════════════════
+       TABS
+    ══════════════════════════════════════════════════ */
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('panel-' + tab).classList.add('active');
+    }
+
+    /* ══════════════════════════════════════════════════
+       DATE MODE
+    ══════════════════════════════════════════════════ */
+    function setDateMode(mode) {
+      dateMode = mode;
+      const monthPicker = document.getElementById('month-picker');
+      const datePicker = document.getElementById('date-picker');
+      const btnSpecific = document.getElementById('btn-specific');
+
+      if (mode === 'month') {
+        monthPicker.classList.add('active');
+        btnSpecific.classList.remove('active');
+        datePicker.classList.remove('visible');
+      } else {
+        monthPicker.classList.remove('active');
+        btnSpecific.classList.add('active');
+        datePicker.classList.add('visible');
+      }
+      applyFilters();
+    }
+
+    /* ══════════════════════════════════════════════════
+       FILTERS & QUERY BUILDING
+    ══════════════════════════════════════════════════ */
+    function getFilters() {
+      const shift = document.getElementById('shift-filter').value;
+      const model = document.getElementById('model-filter').value;
+      const group = document.getElementById('group-filter').value;
+      
+      let dateVal = 'month';
+      if (dateMode === 'month') {
+        dateVal = document.getElementById('month-picker').value;
+      } else {
+        dateVal = document.getElementById('date-picker').value;
+      }
+      
+      return {
+        date: dateVal,
+        shift: shift,
+        model: model,
+        group: group
+      };
+    }
+
+    function buildQ(f) {
+      return new URLSearchParams(f).toString();
+    }
+
+    async function applyFilters() {
+      const f = getFilters();
+      await loadProductionData(f);
+      await loadQualityData(f);
+    }
+
+    /* ══════════════════════════════════════════════════
+       METADATA LOADING
+    ══════════════════════════════════════════════════ */
+    async function loadMeta() {
+      try {
+        const r = await fetch(`${API}/meta`);
+        const d = await r.json();
+        
+        const monthPicker = document.getElementById('month-picker');
+        monthPicker.innerHTML = '<option value="month">Overall Month</option>';
+        d.months.forEach(m => {
+          monthPicker.innerHTML += `<option value="${m}">${m}</option>`;
+        });
+        if (d.months && d.months.length > 0) {
+          monthPicker.value = d.months[d.months.length - 1];
+        }
+
+        const modelPicker = document.getElementById('model-filter');
+        modelPicker.innerHTML = '<option value="all">All Models</option>';
+        d.models.forEach(m => {
+          modelPicker.innerHTML += `<option value="${m}">${m}</option>`;
+        });
+
+        const datePicker = document.getElementById('date-picker');
+        if (d.dates && d.dates.length > 0) {
+          datePicker.min = d.dates[0];
+          datePicker.max = d.dates[d.dates.length - 1];
+          datePicker.value = d.dates[d.dates.length - 1];
+        } else {
+          datePicker.value = new Date().toISOString().slice(0, 10);
+        }
+      } catch (e) {
+        console.error('Meta:', e);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       HELPERS
+    ══════════════════════════════════════════════════ */
+    function fmt(n) {
+      n = Math.round(n);
+      if (n >= 1000000) return (n / 1000000).toFixed(2) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+      return n.toLocaleString();
+    }
+
+    /* ══════════════════════════════════════════════════
+       PRODUCTION DATA
+    ══════════════════════════════════════════════════ */
+    async function loadProductionData(f) {
+      try {
+        const r = await fetch(`${API}/production?${buildQ(f)}`);
+        const d = await r.json();
+        renderCapacityKPIs(d.flow, d.capacity_detail);
+        renderTargetKPIBars(d.flow);
+        renderCapacityTable(d.capacity_detail);
+        renderFlowChart(d.flow, d.groupwise, d.capacity_detail);
+        renderGroupwiseChart(d.groupwise);
+      } catch (e) { console.error('Production:', e); }
+    }
+
+    /* ══════════════════════════════════════════════════
+       QUALITY DATA
+    ══════════════════════════════════════════════════ */
+    async function loadQualityData(f) {
+      try {
+        const r = await fetch(`${API}/quality?${buildQ(f)}`);
+        const d = await r.json();
+        renderQualityKPIs(d.overall);
+        renderFTAGauge(d.overall.fta_pct);
+        renderFTAGroupChart(d.groupwise);
+        renderRejectionChart(d.groupwise);
+        renderReworkChart(d.groupwise);
+        renderQualityTable(d.groupwise);
+      } catch (e) { console.error('Quality:', e); }
+    }
+
+    /* ══════════════════════════════════════════════════
+       REFRESH
+    ══════════════════════════════════════════════════ */
+    async function refreshData() {
+      const btn = document.getElementById('btn-refresh');
+      btn.classList.add('spinning');
+      try {
+        await fetch(`${API}/refresh`);
+        await applyFilters();
+      } finally { btn.classList.remove('spinning'); }
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Capacity KPI Cards
+    ══════════════════════════════════════════════════ */
+    function renderCapacityKPIs(flow, detail) {
+      const card = (accentColor, icon, label, displayVal, subText, badges) => {
+        const isPct = displayVal.toString().includes('%');
+        const pctNum = isPct ? parseFloat(displayVal) : 100;
+        const badgeClass = pctNum >= 100 ? 'up' : pctNum >= 85 ? 'neutral' : 'down';
+        return `
+        <div class="kpi-card animate-in">
+          <div class="kpi-card-accent" style="background:${accentColor}"></div>
+          <div class="kpi-icon">${icon}</div>
+          <div class="kpi-label">${label}</div>
+          <div class="kpi-value" style="color:${accentColor}">${displayVal}</div>
+          <div class="kpi-sub">${subText}</div>
+          <span class="kpi-badge ${badgeClass}">${badges}</span>
+        </div>`;
+      };
+
+      const isSpecific = dateMode === 'specific';
+
+      if (isSpecific) {
+        // Daily View (Specific Date)
+        const pctTill = flow.pct_till_date || 0;
+        const balance = Math.max(0, flow.target_till_date - flow.actuals);
+        
+        document.getElementById('capacity-kpis').innerHTML =
+          card('var(--accent-blue)', '🎯', 'Daily Target',
+            fmt(flow.target_till_date), 'Planned production rate', 'Target Rate') +
+          card('var(--accent-green)', '🏭', 'Daily Actual',
+            fmt(flow.actuals), 'Units completed today', 'Actual Output') +
+          card('var(--accent-cyan)', '⚡', 'Daily Achievement',
+            pctTill.toFixed(1) + '%', `${fmt(flow.actuals)} / ${fmt(flow.target_till_date)} units`,
+            pctTill >= 100 ? '✓ On Track' : pctTill >= 85 ? '≈ Progressing' : '⚠ Below Target') +
+          card('var(--accent-amber)', '📊', 'Daily Balance',
+            balance <= 0 ? '✓ Met' : fmt(balance), 'Remaining to daily target',
+            balance <= 0 ? '✓ Target Achieved' : `Shortfall: ${fmt(balance)}`);
+      } else {
+        // Monthly View / Overall
+        const pctTill = flow.pct_till_date || 0;
+        const pctMonth = flow.pct_month || 0;
+        const balance = Math.max(0, flow.target_month - flow.actuals);
+
+        document.getElementById('capacity-kpis').innerHTML =
+          card('var(--accent-blue)', '🗓', 'Month Target',
+            fmt(flow.target_month), 'Total monthly planned target', 'Planned Target') +
+          card('var(--accent-cyan)', '📅', 'Target Till Date',
+            fmt(flow.target_till_date), `Planned target up to date`, 'Target Till Date') +
+          card('var(--accent-green)', '🏆', 'Month Achievement',
+            pctMonth.toFixed(1) + '%', `${fmt(flow.actuals)} / ${fmt(flow.target_month)} units`,
+            pctMonth >= 100 ? '✓ Achieved' : pctMonth >= 90 ? '≈ On Target' : '⚠ Below Plan') +
+          card('var(--accent-amber)', '📊', 'Month Balance',
+            balance <= 0 ? '✓ Met' : fmt(balance), 'Remaining to monthly target',
+            balance <= 0 ? '✓ Target Achieved' : `Shortfall: ${fmt(balance)}`);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Target KPI Bars
+    ══════════════════════════════════════════════════ */
+    function renderTargetKPIBars(flow) {
+      const isSpecific = dateMode === 'specific';
+      const rows = isSpecific ? [
+        { label: 'Daily Target', val: flow.target_till_date, actual: flow.actuals, color: 'var(--accent-blue)' },
+        { label: 'Daily Achievement %', val: 100, actual: flow.pct_till_date, color: 'var(--accent-green)', isPct: true }
+      ] : [
+        { label: 'Monthly Target', val: flow.target_month, actual: flow.actuals, color: 'var(--accent-blue)' },
+        { label: 'Target Till Date', val: flow.target_till_date, actual: flow.actuals, color: 'var(--accent-cyan)' },
+        { label: 'Till-Date Achievement %', val: 100, actual: flow.pct_till_date, color: 'var(--accent-green)', isPct: true },
+        { label: 'Month Achievement %', val: 100, actual: flow.pct_month, color: 'var(--accent-amber)', isPct: true }
+      ];
+
+      document.getElementById('target-kpi-bars').innerHTML = rows.map(r => {
+        const pct = r.isPct ? Math.min(r.actual, 120) : (r.val > 0 ? Math.min(Math.round(r.actual / r.val * 100), 120) : 0);
+        const display = r.isPct ? `${r.actual.toFixed(1)}%` : `${Math.round(pct)}%`;
+        const sub = r.isPct ? '' : `${fmt(r.actual)} / ${fmt(r.val)}`;
+        return `<div class="cap-row">
+        <div class="cap-row-header">
+          <span class="cap-row-label">${r.label}</span>
+          <span style="display:flex;align-items:baseline;gap:8px">
+            <span class="cap-row-pct" style="color:${r.color}">${display}</span>
+            ${sub ? `<span class="cap-row-vals">${sub}</span>` : ''}
+          </span>
+        </div>
+        <div class="cap-track">
+          <div class="cap-fill" style="width:${Math.min(pct, 100)}%;background:${r.color}"></div>
+        </div>
+      </div>`;
+      }).join('');
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Capacity Table
+    ══════════════════════════════════════════════════ */
+    function renderCapacityTable(detail) {
+      const tbody = document.getElementById('capacity-table-body');
+      if (!detail || !detail.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">No data</td></tr>';
+        return;
+      }
+      tbody.innerHTML = detail.map(c => {
+        const pct = c.month_pct * 100;
+        const col = pct >= 100 ? 'var(--accent-green)' : pct >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const bal = c.balance_month;
+        return `<tr>
+        <td><strong>${c.group}</strong></td>
+        <td style="font-family:'JetBrains Mono',mono;color:var(--text-secondary)">${c.capacity.toFixed(2)}</td>
+        <td style="font-family:'JetBrains Mono',mono">${fmt(c.target_month)}</td>
+        <td style="font-family:'JetBrains Mono',mono">${fmt(c.actuals_qty)}</td>
+        <td><span style="color:${col};font-weight:700">${pct.toFixed(1)}%</span></td>
+        <td style="color:${bal <= 0 ? 'var(--accent-green)' : 'var(--accent-amber)'}">
+          ${bal <= 0 ? '✓ Done' : fmt(bal)}
+        </td>
+      </tr>`;
+      }).join('');
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Flow Chart
+       Uses CAPACITY SHEET data: Target Till Date (In) vs Actuals (Out)
+    ══════════════════════════════════════════════════ */
+    function renderFlowChart(flow, groupwise, detail) {
+      const isSpecificDate = dateMode === 'specific';
+      const flowTitle = isSpecificDate ? 'Production In vs Production Out (Daily)' : 'Production In vs Production Out';
+      const flowSubtitle = isSpecificDate 
+        ? 'Daily target (In) vs daily actual completed output (Out) — by group' 
+        : 'Planned target (In) vs actual completed output (Out) — by group';
+      
+      const canvasEl = document.getElementById('flow-chart');
+      if (canvasEl) {
+        const cardEl = canvasEl.closest('.chart-card');
+        if (cardEl) {
+          const titleEl = cardEl.querySelector('.chart-title');
+          const subEl = cardEl.querySelector('.chart-subtitle');
+          if (titleEl) titleEl.textContent = flowTitle;
+          if (subEl) subEl.textContent = flowSubtitle;
+        }
+      }
+
+      const inVal = flow.target_till_date;
+      const outVal = flow.actuals;
+      const diff = outVal - inVal;
+
+      document.getElementById('flow-summary').innerHTML = `
+      <div class="flow-stat">
+        <span class="flow-stat-label">Production In (Target)</span>
+        <span class="flow-stat-value text-blue">${fmt(inVal)}</span>
+      </div>
+      <div class="flow-divider"></div>
+      <div class="flow-stat">
+        <span class="flow-stat-label">Production Out (Actual)</span>
+        <span class="flow-stat-value text-green">${fmt(outVal)}</span>
+      </div>
+      <div class="flow-divider"></div>
+      <div class="flow-stat">
+        <span class="flow-stat-label">${diff >= 0 ? 'Ahead of Plan' : 'Behind Plan'}</span>
+        <span class="flow-stat-value ${diff >= 0 ? 'text-green' : 'text-red'}">${diff >= 0 ? '+' : ''}${fmt(diff)}</span>
+      </div>
+      <div class="flow-divider"></div>
+      <div class="flow-stat">
+        <span class="flow-stat-label">Month Target</span>
+        <span class="flow-stat-value text-amber">${fmt(flow.target_month)}</span>
+      </div>`;
+
+      const groups = groupwise.groups;
+      const tillData = groupwise.till_date;
+      const actualData = groupwise.actuals;
+
+      if (charts.flow) charts.flow.destroy();
+      charts.flow = new Chart(document.getElementById('flow-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groups,
+          datasets: [
+            {
+              label: 'Production In (Target Till Date)',
+              data: tillData,
+              backgroundColor: 'rgba(79,142,247,0.55)',
+              borderColor: 'var(--accent-blue)',
+              borderWidth: 1.5,
+              borderRadius: 5
+            },
+            {
+              label: 'Production Out (Actual)',
+              data: actualData,
+              backgroundColor: 'rgba(16,185,129,0.55)',
+              borderColor: 'var(--accent-green)',
+              borderWidth: 1.5,
+              borderRadius: 5
+            }
+          ]
+        },
+        options: chartOptions({ yLabel: 'Units' })
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Groupwise Performance
+    ══════════════════════════════════════════════════ */
+    function renderGroupwiseChart(groupwise) {
+      const isSpecificDate = dateMode === 'specific';
+      const gwTitle = isSpecificDate ? 'Daily Target vs Actual Production by Group' : 'Target vs Actual Production by Group';
+      const gwSubtitle = isSpecificDate 
+        ? 'Daily target vs actual output — order-level data from Output sheet' 
+        : 'Monthly target vs actual output — order-level data from Output sheet';
+
+      const canvasEl = document.getElementById('groupwise-chart');
+      if (canvasEl) {
+        const cardEl = canvasEl.closest('.chart-card');
+        if (cardEl) {
+          const titleEl = cardEl.querySelector('.chart-title');
+          const subEl = cardEl.querySelector('.chart-subtitle');
+          if (titleEl) titleEl.textContent = gwTitle;
+          if (subEl) subEl.textContent = gwSubtitle;
+
+          const legendEl = cardEl.querySelector('.chart-legend');
+          if (legendEl) {
+            if (isSpecificDate) {
+              legendEl.innerHTML = `
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-blue)"></div>Daily Target
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-green)"></div>Daily Actual
+                </div>`;
+            } else {
+              legendEl.innerHTML = `
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-blue)"></div>Monthly Target
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-green)"></div>Actual Output
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-amber)"></div>Target Till Date
+                </div>`;
+            }
+          }
+        }
+      }
+
+      if (charts.groupwise) charts.groupwise.destroy();
+      
+      const datasets = isSpecificDate ? [
+        {
+          label: 'Daily Target',
+          data: groupwise.targets,
+          backgroundColor: 'rgba(79,142,247,0.45)',
+          borderColor: 'var(--accent-blue)',
+          borderWidth: 1.5, borderRadius: 4
+        },
+        {
+          label: 'Daily Actual',
+          data: groupwise.actuals,
+          backgroundColor: 'rgba(16,185,129,0.55)',
+          borderColor: 'var(--accent-green)',
+          borderWidth: 1.5, borderRadius: 4
+        }
+      ] : [
+        {
+          label: 'Monthly Target',
+          data: groupwise.targets,
+          backgroundColor: 'rgba(79,142,247,0.45)',
+          borderColor: 'var(--accent-blue)',
+          borderWidth: 1.5, borderRadius: 4
+        },
+        {
+          label: 'Actual Output',
+          data: groupwise.actuals,
+          backgroundColor: 'rgba(16,185,129,0.55)',
+          borderColor: 'var(--accent-green)',
+          borderWidth: 1.5, borderRadius: 4
+        },
+        {
+          label: 'Target Till Date',
+          data: groupwise.till_date,
+          backgroundColor: 'rgba(245,158,11,0.45)',
+          borderColor: 'var(--accent-amber)',
+          borderWidth: 1.5, borderRadius: 4
+        }
+      ];
+
+      charts.groupwise = new Chart(document.getElementById('groupwise-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groupwise.groups,
+          datasets: datasets
+        },
+        options: chartOptions({ yLabel: 'Units' })
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Quality KPIs
+    ══════════════════════════════════════════════════ */
+    function renderQualityKPIs(overall) {
+      const fta = overall.fta_pct || 0;
+      const el = document.getElementById('fta-overall');
+      el.textContent = fta.toFixed(1) + '%';
+      el.style.color = fta >= 97 ? 'var(--accent-green)' : fta >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+      document.getElementById('q-total-acc').textContent = fmt(overall.total_acc || 0);
+      document.getElementById('q-total-rej').textContent = fmt(overall.total_rej || 0);
+      document.getElementById('q-total-rework').textContent = fmt(overall.total_rework || 0);
+      const tot = (overall.total_acc || 0) + (overall.total_rej || 0);
+      const defect = tot > 0 ? ((overall.total_rej || 0) / tot * 100).toFixed(2) + '%' : '0.00%';
+      document.getElementById('q-defect-rate').textContent = defect;
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: FTA Gauge Arc
+    ══════════════════════════════════════════════════ */
+    function renderFTAGauge(ftaPct) {
+      const canvas = document.getElementById('fta-gauge');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2, cy = canvas.height * 0.85;
+      const r = 65;
+      const start = Math.PI, fill = start + (ftaPct / 100) * Math.PI;
+
+      // Track
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI);
+      ctx.strokeStyle = currentTheme === 'light' ? 'rgba(79,142,247,0.14)' : 'rgba(99,130,255,0.12)';
+      ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.stroke();
+
+      // Fill
+      const color = ftaPct >= 97 ? '#10b981' : ftaPct >= 90 ? '#f59e0b' : '#ef4444';
+      const grad = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
+      grad.addColorStop(0, color);
+      grad.addColorStop(1, ftaPct >= 97 ? '#22d3ee' : color);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, start, fill);
+      ctx.strokeStyle = grad; ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.stroke();
+
+      // Labels
+      const style = getComputedStyle(document.documentElement);
+      const tickColor = style.getPropertyValue('--chart-tick').trim() || (currentTheme === 'light' ? '#334155' : '#8b9fc4');
+      ctx.fillStyle = tickColor; ctx.font = '600 10px Inter,sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText('0%', cx - r - 4, cy + 16);
+      ctx.textAlign = 'right'; ctx.fillText('100%', cx + r + 4, cy + 16);
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: FTA Group Chart
+    ══════════════════════════════════════════════════ */
+    function renderFTAGroupChart(groupwise) {
+      const bgColors = groupwise.fta_pct.map(v => v >= 97 ? 'rgba(16,185,129,0.65)' : v >= 90 ? 'rgba(245,158,11,0.65)' : 'rgba(239,68,68,0.65)');
+      const brdColors = groupwise.fta_pct.map(v => v >= 97 ? '#10b981' : v >= 90 ? '#f59e0b' : '#ef4444');
+      if (charts.ftaGroup) charts.ftaGroup.destroy();
+
+      const options = chartOptions({ yLabel: 'FTA %', yMin: 75, yMax: 100 });
+      options.plugins.datalabels = {
+        display: true,
+        color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+        anchor: 'end',
+        align: 'top',
+        offset: -2,
+        font: {
+          weight: 'bold',
+          size: 10
+        },
+        formatter: (v) => v.toFixed(1) + '%'
+      };
+
+      charts.ftaGroup = new Chart(document.getElementById('fta-group-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groupwise.groups,
+          datasets: [{ label: 'FTA %', data: groupwise.fta_pct, backgroundColor: bgColors, borderColor: brdColors, borderWidth: 1.5, borderRadius: 5 }]
+        },
+        options: options
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Rejection Chart
+    ══════════════════════════════════════════════════ */
+    function renderRejectionChart(groupwise) {
+      if (charts.rejection) charts.rejection.destroy();
+      const maxV = Math.max(...groupwise.rejection, 1);
+      charts.rejection = new Chart(document.getElementById('rejection-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groupwise.groups,
+          datasets: [{
+            label: 'Rejection', data: groupwise.rejection,
+            backgroundColor: groupwise.rejection.map(v => `rgba(239,68,68,${0.3 + 0.7 * v / maxV})`),
+            borderColor: '#ef4444', borderWidth: 1.5, borderRadius: 5
+          }]
+        },
+        options: chartOptions({ yLabel: 'Units' })
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Rework Chart
+    ══════════════════════════════════════════════════ */
+    function renderReworkChart(groupwise) {
+      if (charts.rework) charts.rework.destroy();
+      const maxV = Math.max(...groupwise.rework, 1);
+      charts.rework = new Chart(document.getElementById('rework-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groupwise.groups,
+          datasets: [{
+            label: 'Rework', data: groupwise.rework,
+            backgroundColor: groupwise.rework.map(v => `rgba(245,158,11,${0.3 + 0.7 * v / maxV})`),
+            borderColor: '#f59e0b', borderWidth: 1.5, borderRadius: 5
+          }]
+        },
+        options: chartOptions({ yLabel: 'Units' })
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       RENDER: Quality Table
+    ══════════════════════════════════════════════════ */
+    function renderQualityTable(groupwise) {
+      const tbody = document.getElementById('quality-table-body');
+      if (!groupwise.groups || !groupwise.groups.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">No quality data</td></tr>';
+        return;
+      }
+      tbody.innerHTML = groupwise.groups.map((g, i) => {
+        const fta = groupwise.fta_pct[i] || 0;
+        const rej = groupwise.rejection[i] || 0;
+        const rew = groupwise.rework[i] || 0;
+        const acc = groupwise.acceptance[i] || 0;
+        const col = fta >= 97 ? 'var(--accent-green)' : fta >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const lbl = fta >= 97 ? '✓ On Target' : fta >= 90 ? '⚠ Watch' : '✗ Below';
+        return `<tr>
+        <td><strong>${g}</strong></td>
+        <td style="color:var(--accent-green);font-family:'JetBrains Mono',mono">${fmt(acc)}</td>
+        <td style="color:var(--accent-red);font-family:'JetBrains Mono',mono">${fmt(rej)}</td>
+        <td style="color:var(--accent-amber);font-family:'JetBrains Mono',mono">${fmt(rew)}</td>
+        <td style="font-weight:700;color:${col}">${fta.toFixed(1)}%</td>
+        <td><span class="pill" style="background:${col}22;color:${col}">${lbl}</span></td>
+      </tr>`;
+      }).join('');
+    }
+
+    /* ══════════════════════════════════════════════════
+       INIT
+    ══════════════════════════════════════════════════ */
+    async function init() {
+      Chart.register(ChartDataLabels);
+      document.getElementById('month-picker').classList.add('active');
+      await loadMeta();
+      await applyFilters();
+      document.getElementById('loading-overlay').classList.add('hidden');
+      // Auto-refresh every 60s
+      setInterval(async () => { await fetch(`${API}/refresh`).catch(() => { }); await applyFilters(); }, 60000);
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
