@@ -1429,6 +1429,321 @@
         width: 100%;
       }
     }
+
+    /* ══════════════════════════════════════════════════
+       PRESENTATION MODE — FULL-SCREEN SLIDESHOW
+    ══════════════════════════════════════════════════ */
+    #presentation-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-base);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #presentation-overlay.active { display: flex; }
+
+    /* Background effects inside presentation */
+    .pres-bg-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--bg-grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid-color) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .pres-bg-glow {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(140px);
+    }
+    .pres-bg-glow-1 { width:700px;height:700px;top:-250px;left:-200px;background:#4f8ef7;opacity:.07; }
+    .pres-bg-glow-2 { width:600px;height:600px;bottom:-200px;right:-150px;background:#a855f7;opacity:.07; }
+
+    /* Header bar inside presentation */
+    .pres-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 36px;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+    }
+    .pres-header-left { display:flex;align-items:center;gap:16px; }
+    .pres-logo {
+      width:40px;height:40px;
+      background: linear-gradient(135deg,var(--accent-blue),var(--accent-cyan));
+      border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;color:white;font-weight:900;
+    }
+    .pres-title-main { font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-blue); }
+    .pres-title-sub { font-size:16px;font-weight:800;color:var(--text-primary);letter-spacing:-.01em; }
+    .pres-header-right { display:flex;align-items:center;gap:20px; }
+    .pres-clock { font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-secondary); }
+    .pres-live { display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#10b981; }
+    .pres-live-dot { width:8px;height:8px;background:#10b981;border-radius:50%;animation:pulse-green 2s ease-in-out infinite; }
+    .btn-pres-close {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(239,68,68,0.4);
+      background: rgba(239,68,68,0.10);
+      color: #ef4444;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-pres-close:hover { background:rgba(239,68,68,0.22); }
+
+    /* Section badge (OVERALL / GROUP NAME) */
+    .pres-section-badge {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 36px;
+      background: var(--row-hover);
+      border-bottom: 1.5px solid var(--border);
+      flex-shrink: 0;
+    }
+    .pres-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pres-slide-counter {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pres-slide-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    /* Main content area */
+    .pres-content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Each slide panel */
+    .pres-slide {
+      position: absolute;
+      inset: 0;
+      padding: 28px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    .pres-slide.entering {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .pres-slide.exiting {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* Slide title */
+    .pres-slide-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -.02em;
+      border-left: 4px solid var(--accent-blue);
+      padding-left: 16px;
+      flex-shrink: 0;
+    }
+    .pres-slide-title span { color: var(--accent-blue); }
+
+    /* Presentation KPI grid */
+    .pres-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .pres-kpi-card {
+      background: var(--card-shine), var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: var(--pres-kpi-padding, 18px 20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .pres-kpi-accent { position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px; }
+    .pres-kpi-label { font-size: var(--pres-kpi-label-size, 10px); font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+    .pres-kpi-value { font-size: var(--pres-kpi-value-size, 28px); font-weight:900;letter-spacing:-.03em;line-height:1; }
+    .pres-kpi-sub { font-size: var(--pres-kpi-sub-size, 11px); color:var(--text-secondary);margin-top:6px;font-weight:500; }
+    .pres-kpi-icon { position:absolute;top:14px;right:14px;font-size: var(--pres-kpi-icon-size, 24px); opacity: 0.9; }
+    .pres-kpi-badge {
+      display:inline-flex;align-items:center;padding:3px 10px;
+      border-radius:100px;font-size:10px;font-weight:800;margin-top:8px;
+    }
+    .pres-kpi-badge.up { background:rgba(16,185,129,0.15);color:#10b981; }
+    .pres-kpi-badge.down { background:rgba(239,68,68,0.15);color:#ef4444; }
+    .pres-kpi-badge.neutral { background:rgba(79,142,247,0.12);color:var(--accent-blue); }
+
+    /* Presentation chart card */
+    .pres-chart-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .pres-chart-title { font-size:14px;font-weight:800;color:var(--text-primary);margin-bottom:4px; }
+    .pres-chart-subtitle { font-size:11px;color:var(--text-secondary);margin-bottom:14px;font-weight:500; }
+    .pres-chart-wrap { flex:1;position:relative;min-height:0; }
+
+    /* Grid layouts for presentation */
+    .pres-row { display:flex;gap:16px;flex:1;min-height:0; }
+    .pres-col { display:flex;flex-direction:column;flex:1;gap:16px;min-height:0; }
+    .pres-col-fixed { flex-shrink:0; }
+
+    /* Group hero card */
+    .pres-group-hero {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .pres-group-gauge-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pres-group-name { font-size:44px;font-weight:900;letter-spacing:-.04em;color:var(--accent-blue); }
+    .pres-group-status { font-size:13px;font-weight:700; }
+
+    /* Progress bar (capacity bar) in presentation */
+    .pres-cap-bar-wrap { display:flex;flex-direction:column;gap:14px; }
+    .pres-cap-row { display:flex;flex-direction:column;gap:6px; }
+    .pres-cap-header { display:flex;justify-content:space-between;align-items:baseline; }
+    .pres-cap-label { font-size:12px;font-weight:700;color:var(--text-secondary); }
+    .pres-cap-pct { font-size:22px;font-weight:900; }
+    .pres-cap-track { height:12px;background:var(--track-bg);border-radius:100px;overflow:hidden; }
+    .pres-cap-fill { height:100%;border-radius:100px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+    /* Bottom nav bar */
+    .pres-nav-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 12px 36px;
+      border-top: 1px solid var(--border);
+      background: var(--header-bg);
+      flex-shrink: 0;
+    }
+    .pres-dots-wrap { display:flex;gap:5px;align-items:center; }
+    .pres-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      opacity: 0.35;
+      transition: all .3s;
+      cursor: pointer;
+    }
+    .pres-dot.active { width:20px;border-radius:100px;background:var(--accent-blue);opacity:1; }
+    .pres-dot.section-start { background: var(--accent-purple); opacity:0.35; }
+    .pres-dot.section-start.active { background:var(--accent-purple); opacity:1; }
+
+    .btn-pres-nav {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-bright);
+      background: var(--bg-card);
+      color: var(--accent-blue);
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-pres-nav:hover { background:var(--accent-blue);color:white;border-color:transparent; }
+
+    .pres-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4f8ef7, #22d3ee);
+      transition: none;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Play/Pause button in nav */
+    .btn-pres-play {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-bright);
+      background: rgba(79,142,247,0.10);
+      color: var(--accent-blue);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-pres-play:hover { background:var(--row-hover); }
+
+    /* Scrollbar styling for pres slides */
+    .pres-slide::-webkit-scrollbar { width: 4px; }
+    .pres-slide::-webkit-scrollbar-thumb { background: var(--track-bg); border-radius: 4px; }
+
+    /* Present button in header */
+    .btn-present {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 2px solid rgba(168,85,247,0.5);
+      background: rgba(168,85,247,0.12);
+      color: #a855f7;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all .2s;
+      cursor: pointer;
+    }
+    .btn-present:hover { background: rgba(168,85,247,0.25); }
   </style>
 </head>
 
@@ -1473,6 +1788,9 @@
           </div>
         </button>
 
+        <button class="btn-present" id="btn-present" onclick="startPresentation()">
+          📺 Present
+        </button>
         <button class="btn-refresh" id="btn-refresh" onclick="refreshData()">
           <svg id="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -2058,6 +2376,52 @@
     </main>
   </div>
 
+  <!-- ══════════════════════════════════════════════════
+       PRESENTATION MODE OVERLAY
+  ══════════════════════════════════════════════════ -->
+  <div id="presentation-overlay">
+    <div class="pres-bg-grid"></div>
+    <div class="pres-bg-glow pres-bg-glow-1"></div>
+    <div class="pres-bg-glow pres-bg-glow-2"></div>
+
+    <!-- Header -->
+    <div class="pres-header">
+      <div class="pres-header-left">
+        <div class="pres-logo">⚙</div>
+        <div>
+          <div class="pres-title-main">Live Presentation</div>
+          <div class="pres-title-sub">Department of Case Assembly</div>
+        </div>
+      </div>
+      <div class="pres-header-right">
+        <div class="pres-live"><div class="pres-live-dot"></div>LIVE</div>
+        <span class="pres-clock" id="pres-clock"></span>
+        <button class="btn-pres-play" id="pres-play-btn" onclick="togglePresPlay()">⏸ Pause</button>
+        <button class="btn-pres-close" onclick="stopPresentation()">✕ Exit</button>
+      </div>
+    </div>
+
+    <!-- Section badge -->
+    <div class="pres-section-badge">
+      <div class="pres-section-label" id="pres-section-label">🏭 Overall Production</div>
+      <div class="pres-slide-name" id="pres-slide-name">Capacity KPIs</div>
+      <div class="pres-slide-counter" id="pres-slide-counter">1 / 1</div>
+    </div>
+
+    <!-- Slides container -->
+    <div class="pres-content" id="pres-content">
+      <!-- Slides injected by JS -->
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="pres-nav-bar">
+      <button class="btn-pres-nav" onclick="presNav(-1)">❮</button>
+      <div class="pres-dots-wrap" id="pres-dots"></div>
+      <button class="btn-pres-nav" onclick="presNav(1)">❯</button>
+      <div class="pres-progress-bar" id="pres-progress-bar"></div>
+    </div>
+  </div>
+
   <script>
     /* ══════════════════════════════════════════════════
        STATE
@@ -2075,6 +2439,19 @@
     let currentSlideGroupIndex = 0;
     let slideshowGroups = [];
     let autoplayInterval = null;
+
+    /* ── Presentation state ── */
+    let presSlides = [];          // array of {sectionLabel, slideName, buildFn, isGroupSection}
+    let presCurrentIndex = 0;
+    let presPlaying = true;
+    let presTimer = null;
+    let presProgressTimer = null;
+    let presCharts = {};          // chart instances inside presentation
+    const PRES_DURATION = 8000;   // ms per slide (8 s)
+    /* Cached data for building slides */
+    let presData = { prodFlow:null, prodCapDetail:null, prodGroupwise:null,
+                     qualOverall:null, qualGroupwise:null, qualFtaDetail:null,
+                     invFlow:null, invTimeline:null, invMaterials:null, invGroupwise:null };
 
     // ── Apply stored theme on load ──
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -2354,6 +2731,12 @@
         if (alertEl) {
           alertEl.style.display = hasData ? 'none' : 'flex';
         }
+
+        // Cache for presentation mode
+        presData.invFlow = d.flow;
+        presData.invTimeline = d.timeline;
+        presData.invMaterials = d.materials;
+        presData.invGroupwise = d.groupwise;
         
         renderInventoryKPIs(d.flow);
         renderInventoryCharts(d.timeline, d.materials);
@@ -2672,6 +3055,11 @@
         const r = await fetch(`${API}/production?${queryParams.toString()}`);
         const d = await r.json();
         
+        // Cache for presentation mode
+        presData.prodFlow = d.flow;
+        presData.prodCapDetail = d.capacity_detail;
+        presData.prodGroupwise = d.groupwise;
+
         renderCapacityKPIs(d.flow, d.capacity_detail);
         renderSlideshow(d.capacity_detail);
         renderFlowChart(d.flow, d.groupwise, d.capacity_detail);
@@ -2713,6 +3101,11 @@
           const rMonth = await fetch(`${API}/quality?${monthQuery.toString()}`);
           const dMonth = await rMonth.json();
           
+          // Cache for presentation mode
+          presData.qualOverall = dMonth.overall;
+          presData.qualGroupwise = dMonth.groupwise;
+          presData.qualFtaDetail = dFta;
+
           renderQualityKPIs(dMonth.overall);
           renderFTAGauge(dMonth.overall.fta_pct);
           renderFTAGroupChart(dMonth.groupwise);
@@ -2722,6 +3115,11 @@
           
           showQualityWarning(true);
         } else {
+          // Cache for presentation mode
+          presData.qualOverall = d.overall;
+          presData.qualGroupwise = d.groupwise;
+          presData.qualFtaDetail = dFta;
+
           renderQualityKPIs(d.overall);
           renderFTAGauge(d.overall.fta_pct);
           renderFTAGroupChart(d.groupwise);
@@ -2933,13 +3331,14 @@
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const cx = canvas.width / 2, cy = canvas.height / 2;
-      const r = 58;
+      const lineWidth = Math.max(8, Math.round(canvas.width * 0.08));
+      const r = (canvas.width / 2) - (lineWidth / 2) - 4;
       
       // Track
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, 2 * Math.PI);
       ctx.strokeStyle = currentTheme === 'light' ? 'rgba(79,142,247,0.12)' : 'rgba(99,130,255,0.10)';
-      ctx.lineWidth = 10;
+      ctx.lineWidth = lineWidth;
       ctx.stroke();
 
       // Fill (capped at 100% visually for full circle)
@@ -2948,7 +3347,7 @@
       ctx.beginPath();
       ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + (fillPct / 100) * 2 * Math.PI);
       ctx.strokeStyle = color;
-      ctx.lineWidth = 10;
+      ctx.lineWidth = lineWidth;
       ctx.lineCap = 'round';
       ctx.stroke();
     }
@@ -3561,6 +3960,722 @@
     }
 
     /* ══════════════════════════════════════════════════
+       PRESENTATION MODE ENGINE
+    ══════════════════════════════════════════════════ */
+
+    /* ── Start / Stop ── */
+    function startPresentation() {
+      buildPresentationSlides();
+      if (presSlides.length === 0) {
+        alert('Presentation data is not fully loaded. Please wait a moment for the dashboard to finish fetching data.');
+        return;
+      }
+      const overlay = document.getElementById('presentation-overlay');
+      overlay.classList.add('active');
+      presCurrentIndex = 0;
+      presPlaying = true;
+      renderPresSlide(presCurrentIndex, 'right');
+      buildPresDots();
+      presScheduleNext();
+      // Fullscreen request
+      if (overlay.requestFullscreen) overlay.requestFullscreen().catch(() => {});
+    }
+
+    function stopPresentation() {
+      clearTimeout(presTimer);
+      clearInterval(presProgressTimer);
+      // Destroy pres charts
+      Object.values(presCharts).forEach(c => { try { c.destroy(); } catch(e){} });
+      presCharts = {};
+      document.getElementById('presentation-overlay').classList.remove('active');
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+    }
+
+    function togglePresPlay() {
+      presPlaying = !presPlaying;
+      const btn = document.getElementById('pres-play-btn');
+      if (presPlaying) {
+        btn.textContent = '⏸ Pause';
+        presScheduleNext();
+      } else {
+        btn.textContent = '▶ Play';
+        clearTimeout(presTimer);
+        clearInterval(presProgressTimer);
+      }
+    }
+
+    function presNav(dir) {
+      clearTimeout(presTimer);
+      clearInterval(presProgressTimer);
+      const next = (presCurrentIndex + dir + presSlides.length) % presSlides.length;
+      renderPresSlide(next, dir > 0 ? 'right' : 'left');
+      if (presPlaying) presScheduleNext();
+    }
+
+    function presDotClick(idx) {
+      clearTimeout(presTimer);
+      clearInterval(presProgressTimer);
+      const dir = idx >= presCurrentIndex ? 'right' : 'left';
+      renderPresSlide(idx, dir);
+      if (presPlaying) presScheduleNext();
+    }
+
+    function presScheduleNext() {
+      clearTimeout(presTimer);
+      clearInterval(presProgressTimer);
+      // Progress bar animation
+      const bar = document.getElementById('pres-progress-bar');
+      if (bar) {
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.transition = `width ${PRES_DURATION}ms linear`;
+          bar.style.width = '100%';
+        }, 30);
+      }
+      presTimer = setTimeout(() => {
+        const next = (presCurrentIndex + 1) % presSlides.length;
+        renderPresSlide(next, 'right');
+        if (presPlaying) presScheduleNext();
+      }, PRES_DURATION);
+    }
+
+    /* ── Dot indicators ── */
+    function buildPresDots() {
+      const container = document.getElementById('pres-dots');
+      if (!container) return;
+      // Show at most 30 dots to avoid overflow; group dots into clusters
+      const total = presSlides.length;
+      const maxDots = Math.min(total, 30);
+      let html = '';
+      for (let i = 0; i < maxDots; i++) {
+        const realIdx = total > 30 ? Math.round(i * (total - 1) / (maxDots - 1)) : i;
+        const isSection = presSlides[realIdx] && presSlides[realIdx].isGroupSection;
+        html += `<span class="pres-dot ${isSection ? 'section-start' : ''}" onclick="presDotClick(${realIdx})" data-dot-real="${realIdx}"></span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function updatePresDots() {
+      const dots = document.querySelectorAll('#pres-dots .pres-dot');
+      dots.forEach(d => {
+        const realIdx = parseInt(d.getAttribute('data-dot-real'));
+        d.classList.toggle('active', realIdx === presCurrentIndex);
+      });
+    }
+
+    /* ── Render a slide ── */
+    function renderPresSlide(idx, direction) {
+      // Destroy existing charts in old slide
+      Object.keys(presCharts).forEach(k => {
+        try { presCharts[k].destroy(); } catch(e) {}
+        delete presCharts[k];
+      });
+
+      const content = document.getElementById('pres-content');
+      if (!content || !presSlides[idx]) return;
+
+      presCurrentIndex = idx;
+      const slide = presSlides[idx];
+
+      // Update badges
+      const sectionEl = document.getElementById('pres-section-label');
+      const nameEl = document.getElementById('pres-slide-name');
+      const counterEl = document.getElementById('pres-slide-counter');
+      if (sectionEl) sectionEl.innerHTML = slide.sectionLabel;
+      if (nameEl) nameEl.textContent = slide.slideName;
+      if (counterEl) counterEl.textContent = `${idx + 1} / ${presSlides.length}`;
+
+      // Build slide HTML
+      const div = document.createElement('div');
+      div.className = 'pres-slide';
+      div.innerHTML = slide.buildFn();
+      content.innerHTML = '';
+      content.appendChild(div);
+
+      // Animate in
+      div.style.transform = direction === 'right' ? 'translateX(60px)' : 'translateX(-60px)';
+      div.style.opacity = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.classList.add('entering');
+          div.style.transform = '';
+          div.style.opacity = '';
+          // Init charts for this slide
+          setTimeout(() => { slide.initChartsFn && slide.initChartsFn(); }, 60);
+        });
+      });
+
+      updatePresDots();
+    }
+
+    /* ── Helpers for building slide HTML ── */
+    function presKpiCard(accent, icon, label, value, sub, badgeText, badgeClass) {
+      return `<div class="pres-kpi-card">
+        <div class="pres-kpi-accent" style="background:${accent}"></div>
+        <div class="pres-kpi-icon">${icon}</div>
+        <div class="pres-kpi-label">${label}</div>
+        <div class="pres-kpi-value" style="color:${accent}">${value}</div>
+        <div class="pres-kpi-sub">${sub}</div>
+        <span class="pres-kpi-badge ${badgeClass}">${badgeText}</span>
+      </div>`;
+    }
+
+    function presChartCard(title, subtitle, canvasId, height) {
+      return `<div class="pres-chart-card">
+        <div class="pres-chart-title">${title}</div>
+        <div class="pres-chart-subtitle">${subtitle}</div>
+        <div class="pres-chart-wrap" style="height:${height||'100%'}">
+          <canvas id="${canvasId}"></canvas>
+        </div>
+      </div>`;
+    }
+
+    function getGroupIcon(group) {
+      const g = (group || '').toUpperCase().trim();
+      if (g === 'A1') return '⚡';
+      if (g === 'A2') return '🔌';
+      if (g === 'A3') return '⚙️';
+      if (g === 'G1') return '🔧';
+      if (g === 'G2') return '🔨';
+      if (g === 'G3') return '🔩';
+      if (g === 'G4') return '📐';
+      if (g === 'G5') return '🔋';
+      if (g === 'G6') return '⚙️';
+      if (g === 'G7') return '💡';
+      if (g === 'G8') return '💎';
+      if (g === 'PED') return '💻';
+      if (g === 'PED-AUTO') return '🤖';
+      return '🏭';
+    }
+
+    /* ── Build all slides from current data ── */
+    function buildPresentationSlides() {
+      presSlides = [];
+
+      const d = presData;
+      const workingDays = parseFloat(document.getElementById('working-days-input').value) || 1.0;
+      const effBadge = (pct) => pct >= 100 ? ['✓ Met','up'] : pct >= 90 ? ['≈ Progressing','neutral'] : ['⚠ Below Target','down'];
+
+      /* ================================================================
+         SECTION 1 — OVERALL PRODUCTION
+      ================================================================ */
+
+      // Slide 1a: Overall Capacity KPIs
+      if (d.prodFlow && d.prodCapDetail) {
+        const detail = d.prodCapDetail;
+        const flow = d.prodFlow;
+        const shopAgreed = detail.reduce((a,c) => a + c.rate_per_day, 0) * 1000;
+        const shopCap = detail.reduce((a,c) => a + c.capacity, 0) * 1000;
+        const shopRolling = detail.reduce((a,c) => a + c.target_till_date, 0);
+        const totalTargetRate = shopAgreed;
+        const totalTargetVol = totalTargetRate * workingDays;
+        const totalActualVol = flow.actuals || 0;
+        const totalActualRate = totalActualVol / workingDays;
+        const volEff = totalTargetVol > 0 ? (totalActualVol / totalTargetVol) * 100 : 0;
+        const rateEff = totalTargetRate > 0 ? (totalActualRate / totalTargetRate) * 100 : 0;
+        const [vBadge, vClass] = effBadge(volEff);
+        const [rBadge, rClass] = effBadge(rateEff);
+
+        presSlides.push({
+          sectionLabel: '🏭 Overall Production',
+          slideName: 'Capacity KPIs',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Production — <span>Capacity KPIs</span></div>
+            <div class="pres-kpi-grid" style="grid-template-columns:repeat(6,1fr)">
+              ${presKpiCard('var(--accent-blue)','🗓','Target Volume',fmt(totalTargetVol),`For ${workingDays} working days`,'Target Vol','neutral')}
+              ${presKpiCard('var(--accent-cyan)','⚡','Target Rate',fmt(totalTargetRate)+'/day','Planned daily production rate','Target Rate','neutral')}
+              ${presKpiCard('var(--accent-green)','🏭','Actual Volume',fmt(totalActualVol),'Produced this period','Actual Vol','neutral')}
+              ${presKpiCard('var(--accent-teal)','📈','Actual Rate',fmt(totalActualRate)+'/day','Avg per working day','Actual Rate','neutral')}
+              ${presKpiCard('var(--accent-amber)','🏆','Volume Efficiency',volEff.toFixed(1)+'%',`${fmt(totalActualVol)} / ${fmt(totalTargetVol)} nos`,vBadge,vClass)}
+              ${presKpiCard('var(--accent-purple)','📊','Rate Efficiency',rateEff.toFixed(1)+'%','Actual rate vs target rate',rBadge,rClass)}
+            </div>
+            <div class="pres-kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+              ${presKpiCard('var(--accent-blue)','🏭','Shop Capacity',fmt(shopCap),'Max daily physical limit','Capacity','neutral')}
+              ${presKpiCard('var(--accent-cyan)','🤝','Agreed Capacity',fmt(shopAgreed)+'/day','Planned target daily rate','Agreed','neutral')}
+              ${presKpiCard('var(--accent-purple)','🔄','Rolling Target',fmt(shopRolling),'Cumulative target for period','Rolling','neutral')}
+            </div>`,
+          initChartsFn: null
+        });
+      }
+
+      // Slide 1b: Production In vs Out chart
+      if (d.prodFlow && d.prodGroupwise) {
+        const flow = d.prodFlow;
+        const groupwise = d.prodGroupwise;
+        const mapped = groupwise.groups.map((g,i) => ({g, t: groupwise.till_date[i]||0, a: groupwise.actuals[i]||0}));
+        mapped.sort((a,b) => b.t - a.t);
+        const inVal = flow.target_till_date;
+        const outVal = flow.actuals;
+        const diff = outVal - inVal;
+
+        presSlides.push({
+          sectionLabel: '🏭 Overall Production',
+          slideName: 'Production In vs Out',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Production — <span>Production In vs Out</span></div>
+            <div style="display:flex;gap:32px;margin-bottom:4px;flex-shrink:0">
+              <div><div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Production In (Target)</div><div style="font-size:28px;font-weight:900;color:#4f8ef7">${fmt(inVal)}</div></div>
+              <div style="width:1px;background:var(--sep-color);align-self:stretch"></div>
+              <div><div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Production Out (Actual)</div><div style="font-size:28px;font-weight:900;color:#10b981">${fmt(outVal)}</div></div>
+              <div style="width:1px;background:var(--sep-color);align-self:stretch"></div>
+              <div><div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">${diff>=0?'Ahead of Plan':'Behind Plan'}</div><div style="font-size:28px;font-weight:900;color:${diff>=0?'#10b981':'#ef4444'}">${diff>=0?'+':''}${fmt(diff)}</div></div>
+              <div style="width:1px;background:var(--sep-color);align-self:stretch"></div>
+              <div><div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Month Target</div><div style="font-size:28px;font-weight:900;color:#f59e0b">${fmt(flow.target_month)}</div></div>
+            </div>
+            ${presChartCard('Production In vs Production Out','Planned target (In) vs actual completed output (Out) — by group','pres-flow-chart')}`,
+          initChartsFn: () => {
+            const c = document.getElementById('pres-flow-chart');
+            if (!c) return;
+            const sortedG = mapped.map(x => x.g);
+            const sortedT = mapped.map(x => x.t);
+            const sortedA = mapped.map(x => x.a);
+            if (presCharts.flow) presCharts.flow.destroy();
+            presCharts.flow = new Chart(c.getContext('2d'), {
+              type:'bar',
+              data:{labels:sortedG, datasets:[
+                {label:'Production In (Target)',data:sortedT,backgroundColor:'rgba(79,142,247,0.55)',borderColor:'#4f8ef7',borderWidth:1.5,borderRadius:5},
+                {label:'Production Out (Actual)',data:sortedA,backgroundColor:'rgba(16,185,129,0.55)',borderColor:'#10b981',borderWidth:1.5,borderRadius:5}
+              ]},
+              options: presChartOptions()
+            });
+          }
+        });
+      }
+
+      // Slide 1c: Target vs Actual vs Balance by group
+      if (d.prodGroupwise) {
+        const groupwise = d.prodGroupwise;
+        const mapped2 = groupwise.groups.map((g,i) => ({g, t:groupwise.targets[i]||0, a:groupwise.actuals[i]||0, b:Math.max(0,(groupwise.targets[i]||0)-(groupwise.actuals[i]||0))}));
+        mapped2.sort((a,b) => b.t - a.t);
+
+        presSlides.push({
+          sectionLabel: '🏭 Overall Production',
+          slideName: 'Target vs Actual by Group',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Production — <span>Target vs Actual by Group</span></div>
+            ${presChartCard('Target vs Actual Production by Group','Monthly target vs actual output with balance remaining','pres-gw-chart')}`,
+          initChartsFn: () => {
+            const c = document.getElementById('pres-gw-chart');
+            if (!c) return;
+            if (presCharts.gw) presCharts.gw.destroy();
+            presCharts.gw = new Chart(c.getContext('2d'), {
+              type:'bar',
+              data:{labels:mapped2.map(x=>x.g), datasets:[
+                {label:'Monthly Target',data:mapped2.map(x=>x.t),backgroundColor:'rgba(79,142,247,0.45)',borderColor:'#4f8ef7',borderWidth:1.5,borderRadius:4},
+                {label:'Actual Output',data:mapped2.map(x=>x.a),backgroundColor:'rgba(16,185,129,0.55)',borderColor:'#10b981',borderWidth:1.5,borderRadius:4},
+                {label:'Balance',data:mapped2.map(x=>x.b),backgroundColor:'rgba(245,158,11,0.45)',borderColor:'#f59e0b',borderWidth:1.5,borderRadius:4}
+              ]},
+              options: presChartOptions()
+            });
+          }
+        });
+      }
+
+      /* ================================================================
+         SECTION 2 — OVERALL QUALITY
+      ================================================================ */
+
+      // Slide 2a: Quality KPIs
+      if (d.qualOverall) {
+        const qo = d.qualOverall;
+        const fta = (qo.fta_pct||0) <= 1 ? (qo.fta_pct||0)*100 : (qo.fta_pct||0);
+        const tot = (qo.total_acc||0) + (qo.total_rej||0);
+        const defectRate = tot > 0 ? ((qo.total_rej||0)/tot*100).toFixed(2)+'%' : '0.00%';
+        const ftaCol = fta>=97?'var(--accent-green)':fta>=90?'var(--accent-amber)':'var(--accent-red)';
+
+        // Stripping & LE/HE KPIs
+        const strip = (d.qualFtaDetail && d.qualFtaDetail.stripping) || {};
+        const stripPct = strip.stripping_pct || 0;
+        const monthly = (d.qualFtaDetail && d.qualFtaDetail.monthly) || [];
+        let leTotalLots=0,leAccLots=0,heLotTotal=0,heAccTotal=0,heRejTotal=0;
+        monthly.forEach(m => { leTotalLots+=m.le_lots||0; leAccLots+=m.le_acc_lots||0; heLotTotal+=m.he_lot||0; heAccTotal+=m.he_acc||0; heRejTotal+=m.he_rej||0; });
+        const leFta = leTotalLots>0 ? (leAccLots/leTotalLots*100) : 0;
+        const heFta = heLotTotal>0 ? (heAccTotal/heLotTotal*100) : 0;
+
+        presSlides.push({
+          sectionLabel: '✅ Overall Quality',
+          slideName: 'Quality KPIs',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Quality — <span>KPIs & FTA Summary</span></div>
+            <div style="display:flex;flex-direction:column;gap:24px;flex:1;justify-content:center;--pres-kpi-padding:22px 24px;--pres-kpi-value-size:36px;--pres-kpi-label-size:11px;--pres-kpi-sub-size:12px;--pres-kpi-icon-size:28px">
+              <div class="pres-kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:16px">
+                ${presKpiCard(ftaCol,'📊','Overall FTA %',fta.toFixed(1)+'%','Weighted avg across all groups','FTA','neutral')}
+                ${presKpiCard('var(--accent-green)','✅','Total Accepted',fmt(qo.total_acc||0),'Nos passed inspection','Accepted','neutral')}
+                ${presKpiCard('var(--accent-red)','❌','Total Rejection',fmt(qo.total_rej||0),'Lot inspection rejections','Rejection','down')}
+                ${presKpiCard('var(--accent-amber)','🔧','Total Rework',fmt(qo.total_rework||0),'100% & HE inspection rework','Rework','neutral')}
+              </div>
+              <div class="pres-kpi-grid" style="grid-template-columns:repeat(3,1fr);gap:16px">
+                ${presKpiCard('var(--accent-purple)','🔁','Stripping %',stripPct.toFixed(2)+'%',`${fmt(strip.total_stripping||0)} stripped / ${fmt(strip.total_output||0)} output`,stripPct<=1?'Low':'High',stripPct<=1?'up':'down')}
+                ${presKpiCard('var(--accent-cyan)','🔵','LE FTA % (IQF)',leFta.toFixed(2)+'%',`${fmt(leAccLots)} acc / ${fmt(leTotalLots)} lots`,'LE FTA','neutral')}
+                ${presKpiCard('var(--accent-teal)','🟢','HE FTA % (IQF)',heFta.toFixed(2)+'%',`${fmt(heLotTotal)} lots | ${fmt(heRejTotal)} rej`,'HE FTA','neutral')}
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--note-bg);border:1.5px solid var(--note-border);border-radius:10px;font-size:12px;color:var(--text-secondary);flex-shrink:0">
+              <span style="font-size:14px">ℹ️</span><span>Defect Rate: <strong style="color:var(--text-primary)">${defectRate}</strong> &nbsp;|&nbsp; Target FTA: <strong style="color:#10b981">≥ 97%</strong></span>
+            </div>`,
+          initChartsFn: null
+        });
+      }
+
+      // Slide 2b: FTA by group chart
+      if (d.qualGroupwise) {
+        const gw = d.qualGroupwise;
+        const normFta = (gw.fta_pct||[]).map(v => v<=1?v*100:v);
+        presSlides.push({
+          sectionLabel: '✅ Overall Quality',
+          slideName: 'FTA % by Group',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Quality — <span>FTA % by Group</span></div>
+            ${presChartCard('First Time Acceptance % — Group Breakdown','Average weighted FTA per assembly group (target ≥ 97%)','pres-fta-group-chart')}`,
+          initChartsFn: () => {
+            const c = document.getElementById('pres-fta-group-chart');
+            if (!c) return;
+            const bgC = normFta.map(v => v>=97?'rgba(16,185,129,0.65)':v>=90?'rgba(245,158,11,0.65)':'rgba(239,68,68,0.65)');
+            const brC = normFta.map(v => v>=97?'#10b981':v>=90?'#f59e0b':'#ef4444');
+            if (presCharts.ftaGrp) presCharts.ftaGrp.destroy();
+            const opts = presChartOptions({yMin:75,yMax:100});
+            opts.plugins.datalabels = {display:true,color:'#f0f4ff',anchor:'end',align:'top',offset:-2,font:{weight:'bold',size:11},formatter:v=>v.toFixed(1)+'%'};
+            presCharts.ftaGrp = new Chart(c.getContext('2d'),{
+              type:'bar',
+              data:{labels:gw.groups, datasets:[{label:'FTA %',data:normFta,backgroundColor:bgC,borderColor:brC,borderWidth:1.5,borderRadius:5}]},
+              options:opts
+            });
+          }
+        });
+      }
+
+      // Slide 2c: Rejection & Rework side by side
+      if (d.qualGroupwise) {
+        const gw = d.qualGroupwise;
+        const maxRej = Math.max(...(gw.rejection||[1]),1);
+        const maxRew = Math.max(...(gw.rework||[1]),1);
+        presSlides.push({
+          sectionLabel: '✅ Overall Quality',
+          slideName: 'Rejection & Rework by Group',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Quality — <span>Rejection & Rework by Group</span></div>
+            <div class="pres-row">
+              ${presChartCard('Rejection by Group','Nos rejected at lot inspection','pres-rej-chart')}
+              ${presChartCard('Rework by Group','100% & HE inspection rework nos','pres-rew-chart')}
+            </div>`,
+          initChartsFn: () => {
+            const c1 = document.getElementById('pres-rej-chart');
+            const c2 = document.getElementById('pres-rew-chart');
+            if (c1) {
+              if (presCharts.rej) presCharts.rej.destroy();
+              presCharts.rej = new Chart(c1.getContext('2d'),{
+                type:'bar',
+                data:{labels:gw.groups, datasets:[{label:'Rejection',data:gw.rejection,backgroundColor:gw.rejection.map(v=>`rgba(239,68,68,${0.3+0.7*v/maxRej})`),borderColor:'#ef4444',borderWidth:1.5,borderRadius:5}]},
+                options:presChartOptions()
+              });
+            }
+            if (c2) {
+              if (presCharts.rew) presCharts.rew.destroy();
+              presCharts.rew = new Chart(c2.getContext('2d'),{
+                type:'bar',
+                data:{labels:gw.groups, datasets:[{label:'Rework',data:gw.rework,backgroundColor:gw.rework.map(v=>`rgba(245,158,11,${0.3+0.7*v/maxRew})`),borderColor:'#f59e0b',borderWidth:1.5,borderRadius:5}]},
+                options:presChartOptions()
+              });
+            }
+          }
+        });
+      }
+
+      /* ================================================================
+         SECTION 3 — OVERALL INVENTORY
+      ================================================================ */
+
+      // Slide 3a: Inventory KPIs
+      if (d.invFlow) {
+        const f = d.invFlow;
+        presSlides.push({
+          sectionLabel: '📦 Overall Inventory',
+          slideName: 'Inventory KPIs',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Inventory — <span>Flow & WIP KPIs</span></div>
+            <div class="pres-kpi-grid" style="grid-template-columns:repeat(2,1fr);gap:24px;flex:1;align-content:center;--pres-kpi-padding:28px 30px;--pres-kpi-value-size:42px;--pres-kpi-label-size:12px;--pres-kpi-sub-size:13px;--pres-kpi-icon-size:32px">
+              ${presKpiCard('var(--accent-blue)','📥','Total Fresh Input',fmt(f.fresh_input),'Fresh stock entering assembly lines','Fresh Input','neutral')}
+              ${presKpiCard('var(--accent-green)','📤','Total Output',fmt(f.total_output),'Completed accepted cases output','Output','neutral')}
+              ${presKpiCard('var(--accent-amber)','🔄','Active WIP Balance',fmt(f.wip_balance),'Current work-in-progress on floor','WIP','neutral')}
+              ${presKpiCard('var(--accent-purple)','📊','Average WIP',fmt(f.avg_wip),'Weighted avg WIP over period','Avg WIP','neutral')}
+            </div>`,
+          initChartsFn: null
+        });
+      }
+
+      // Slide 3b: Inventory Timeline
+      if (d.invTimeline) {
+        const tl = d.invTimeline;
+        const wipData = tl.wip || [];
+        presSlides.push({
+          sectionLabel: '📦 Overall Inventory',
+          slideName: 'Daily Input / Output / WIP Timeline',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Inventory — <span>Daily Input / Output / WIP Timeline</span></div>
+            ${presChartCard('Daily Input, Output, and WIP Balance','Tracking flow of materials and active Work-In-Progress balance over time','pres-inv-timeline-chart')}`,
+          initChartsFn: () => {
+            const c = document.getElementById('pres-inv-timeline-chart');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const h = c.offsetHeight || 300;
+            const gi = ctx.createLinearGradient(0,0,0,h); gi.addColorStop(0,'rgba(79,142,247,0.55)'); gi.addColorStop(1,'rgba(79,142,247,0.02)');
+            const go = ctx.createLinearGradient(0,0,0,h); go.addColorStop(0,'rgba(16,185,129,0.55)'); go.addColorStop(1,'rgba(16,185,129,0.02)');
+            const gw2 = ctx.createLinearGradient(0,0,0,h); gw2.addColorStop(0,'rgba(245,158,11,0.65)'); gw2.addColorStop(1,'rgba(245,158,11,0.04)');
+            const labels = (tl.dates||[]).map(d2 => { try{const p=d2.split('-');return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('en-IN',{day:'numeric',month:'short'});}catch{return d2;} });
+            if (presCharts.invTl) presCharts.invTl.destroy();
+            presCharts.invTl = new Chart(ctx,{
+              type:'line',
+              data:{labels, datasets:[
+                {label:'Daily Input',data:tl.input,borderColor:'#4f8ef7',backgroundColor:gi,borderWidth:2.5,pointRadius:3,tension:0.35,fill:true},
+                {label:'Daily Output',data:tl.output,borderColor:'#10b981',backgroundColor:go,borderWidth:2.5,pointRadius:3,tension:0.35,fill:true},
+                {label:'WIP Balance',data:tl.wip,borderColor:'#f59e0b',backgroundColor:gw2,borderWidth:3,pointRadius:4,pointBackgroundColor:wipData.map((v,i)=>i>0&&v>wipData[i-1]?'#fb7185':'#34d399'),tension:0.35,fill:true,segment:{borderColor:ctx2=>{const i2=ctx2.p0DataIndex;const p=wipData[i2]??0;const n=wipData[i2+1]??0;return n>p?'rgba(251,113,133,0.9)':'rgba(52,211,153,0.9)';}},}
+              ]},
+              options:{...presChartOptions(),plugins:{...presChartOptions().plugins,legend:{display:true,position:'top',labels:{color:'#8b9fc4',usePointStyle:true,padding:16,font:{size:12}}},datalabels:{display:ctx3=>ctx3.datasetIndex===2,align:'top',anchor:'end',color:ctx4=>{const i3=ctx4.dataIndex;const da=ctx4.dataset.data;return i3>0&&da[i3]>da[i3-1]?'#fb7185':'#34d399';},font:{size:9,weight:'700'},formatter:v=>v?v.toLocaleString():''}}}
+            });
+          }
+        });
+      }
+
+      // Slide 3c: Material Consumption charts
+      if (d.invMaterials) {
+        const mats = d.invMaterials;
+        presSlides.push({
+          sectionLabel: '📦 Overall Inventory',
+          slideName: 'Material Consumption (Adhesives & Gaskets)',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Inventory — <span>Material Consumption</span></div>
+            <div class="pres-row">
+              ${presChartCard('Adhesives vs Gaskets Usage by Group','Quantities consumed (nos) in raw Input sheet','pres-inv-mat-chart')}
+              ${presChartCard('Material Consumption: Regular vs Add-on Groups','Comparison of total adhesives & gaskets used','pres-inv-cat-chart')}
+            </div>`,
+          initChartsFn: () => {
+            const c1 = document.getElementById('pres-inv-mat-chart');
+            const c2 = document.getElementById('pres-inv-cat-chart');
+            if (c1) {
+              if (presCharts.invMat) presCharts.invMat.destroy();
+              presCharts.invMat = new Chart(c1.getContext('2d'),{
+                type:'bar', data:{labels:mats.groups.map(g=>g.group), datasets:[
+                  {label:'Adhesives',data:mats.groups.map(g=>g.adhe),backgroundColor:'rgba(79,142,247,0.65)',borderColor:'#4f8ef7',borderWidth:1.5,borderRadius:4},
+                  {label:'Gaskets',data:mats.groups.map(g=>g.gask),backgroundColor:'rgba(34,211,238,0.65)',borderColor:'#22d3ee',borderWidth:1.5,borderRadius:4}
+                ]}, options:presChartOptions()
+              });
+            }
+            if (c2) {
+              if (presCharts.invCat) presCharts.invCat.destroy();
+              presCharts.invCat = new Chart(c2.getContext('2d'),{
+                type:'bar', data:{labels:['Regular (G1-G8)','Add-on (A1-A3)'], datasets:[
+                  {label:'Adhesives',data:[mats.regular.adhe,mats.addon.adhe],backgroundColor:'rgba(79,142,247,0.65)',borderColor:'#4f8ef7',borderWidth:1.5,borderRadius:4},
+                  {label:'Gaskets',data:[mats.regular.gask,mats.addon.gask],backgroundColor:'rgba(34,211,238,0.65)',borderColor:'#22d3ee',borderWidth:1.5,borderRadius:4}
+                ]}, options:presChartOptions()
+              });
+            }
+          }
+        });
+      }
+
+      /* ================================================================
+         SECTION 4 — INDIVIDUAL GROUP SLIDES
+         One group at a time: Production → Quality → Inventory
+      ================================================================ */
+      if (d.prodCapDetail && d.prodCapDetail.length > 0) {
+        const allGroups = d.prodCapDetail.map(c => c.group);
+        const qgw = d.qualGroupwise;
+        const igw = d.invGroupwise;
+
+        allGroups.forEach((groupName, gIdx) => {
+          const capRow = d.prodCapDetail[gIdx];
+          const capPerDay = (capRow.capacity||0) * 1000;
+          const ratePerDay = (capRow.rate_per_day||0) * 1000;
+          const targetVol = ratePerDay * workingDays;
+          const actualVol = capRow.actuals_qty || 0;
+          const eff = targetVol > 0 ? (actualVol / targetVol) * 100 : 0;
+          const balance = Math.max(0, targetVol - actualVol);
+          const effCol = eff>=100?'#10b981':eff>=90?'#f59e0b':'#ef4444';
+          const [eBadge, eClass] = effBadge(eff);
+
+          // Quality for this group
+          let grpFta = 0, grpAcc = 0, grpRej = 0, grpRew = 0;
+          if (qgw && qgw.groups) {
+            const qi = qgw.groups.findIndex(g => g.toUpperCase() === groupName.toUpperCase());
+            if (qi >= 0) {
+              grpFta = (qgw.fta_pct[qi]||0) <= 1 ? (qgw.fta_pct[qi]||0)*100 : (qgw.fta_pct[qi]||0);
+              grpAcc = qgw.acceptance[qi] || 0;
+              grpRej = qgw.rejection[qi] || 0;
+              grpRew = qgw.rework[qi] || 0;
+            }
+          }
+          const ftaCol = grpFta>=97?'#10b981':grpFta>=90?'#f59e0b':'#ef4444';
+
+          // Inventory for this group
+          let invRow = null;
+          if (igw && igw.length > 0) {
+            invRow = igw.find(g => g.group && g.group.toUpperCase() === groupName.toUpperCase()) || null;
+          }
+
+          // Group production slide
+          const weeks = (metaData && metaData.month_weeks && metaData.month_weeks[selectedMonth]) || [];
+          const totalMonthDays = weeks.reduce((acc,w)=>acc.concat(w.dates),[]).length || 20;
+          const remainingDays = Math.max(1, totalMonthDays - workingDays);
+          const lackingRate = balance / remainingDays;
+          const reqRate = ratePerDay + lackingRate;
+          const canvasGroupId = `pres-grp-gauge-${gIdx}`;
+
+          presSlides.push({
+            sectionLabel: `Group: <strong style="color:var(--accent-purple);margin-left:6px">${groupName}</strong>`,
+            slideName: `${groupName} — Production`,
+            isGroupSection: true,
+            buildFn: () => `
+              <div class="pres-slide-title">Group <span>${groupName}</span> — Production Performance</div>
+              <div class="pres-group-hero" style="grid-template-columns: 240px 1fr; gap: 24px; flex: 1; align-items: stretch">
+                <div class="pres-group-gauge-card" style="padding: 28px 20px; gap: 16px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center">
+                  <div class="pres-group-name" style="font-size:54px;font-weight:900;color:var(--accent-blue);letter-spacing:-.04em;line-height:1">${groupName}</div>
+                  <canvas id="${canvasGroupId}" width="160" height="160"></canvas>
+                  <div style="font-size:32px;font-weight:900;color:${effCol};letter-spacing:-.03em;line-height:1">${eff.toFixed(1)}%</div>
+                  <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">Efficiency</div>
+                  <div class="pres-group-status" style="color:${effCol};font-weight:700">${eff>=100?'✓ Target Met':eff>=90?'≈ On Target':'⚠ Below Target'}</div>
+                </div>
+                <div class="pres-kpi-grid" style="align-content:stretch; gap: 24px; --pres-kpi-padding: 28px 30px; --pres-kpi-value-size: 42px; --pres-kpi-label-size: 12px; --pres-kpi-sub-size: 13px; --pres-kpi-icon-size: 32px">
+                  ${presKpiCard('var(--accent-blue)','🏭','Daily Capacity',fmt(capPerDay)+'/day','Max physical capacity limit','Capacity','neutral')}
+                  ${presKpiCard('var(--accent-cyan)','🎯','Target Volume',fmt(targetVol),`Target for ${workingDays} days`,'Target Vol','neutral')}
+                  ${presKpiCard('var(--accent-green)','🏆','Actual Output',fmt(actualVol),'Completed during period',eBadge,eClass)}
+                  ${presKpiCard('var(--accent-purple)','📊','Rolling Target',fmt(capRow.target_till_date),'Target till date (Excel)','Rolling','neutral')}
+                  ${presKpiCard(balance===0?'var(--accent-green)':'var(--accent-amber)','⚖️','Balance Target',balance===0?'✓ Met':fmt(balance),'Remaining target volume',balance===0?'Met':'Remaining',balance===0?'up':'neutral')}
+                  ${presKpiCard('var(--accent-amber)','⚙️','Required Rate',fmt(reqRate)+'/day',lackingRate>0?`Planned + lacking (+${fmt(lackingRate)}/d)`:'Planned rate (no lacking nos)','Req Rate','neutral')}
+                </div>
+              </div>`,
+            initChartsFn: () => {
+              renderSlideGauge(canvasGroupId, eff);
+            }
+          });
+
+          // Group quality slide
+          presSlides.push({
+            sectionLabel: `Group: <strong style="color:var(--accent-purple);margin-left:6px">${groupName}</strong>`,
+            slideName: `${groupName} — Quality`,
+            isGroupSection: false,
+            buildFn: () => `
+              <div class="pres-slide-title">Group <span>${groupName}</span> — Quality Performance</div>
+              <div class="pres-kpi-grid" style="grid-template-columns:repeat(4,1fr); gap: 24px; --pres-kpi-padding: 28px 30px; --pres-kpi-value-size: 42px; --pres-kpi-label-size: 12px; --pres-kpi-sub-size: 13px; --pres-kpi-icon-size: 32px">
+                ${presKpiCard(ftaCol,'📊','FTA %',grpFta.toFixed(1)+'%','First Time Acceptance',grpFta>=97?'✓ On Target':grpFta>=90?'⚠ Watch':'✗ Below',grpFta>=97?'up':grpFta>=90?'neutral':'down')}
+                ${presKpiCard('var(--accent-green)','✅','Accepted',fmt(grpAcc),'Nos passed inspection','Accepted','neutral')}
+                ${presKpiCard('var(--accent-red)','❌','Rejection',fmt(grpRej),'Lot inspection rejections','Rejection',grpRej===0?'up':'down')}
+                ${presKpiCard('var(--accent-amber)','🔧','Rework',fmt(grpRew),'100% & HE inspection rework','Rework','neutral')}
+              </div>
+              <div style="display:flex;gap:24px;align-items:stretch;flex:1;min-height:0">
+                <div style="width:240px;text-align:center;background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;align-self:stretch">
+                  <div style="font-size:54px;font-weight:900;color:var(--accent-blue);letter-spacing:-.04em;line-height:1">${groupName}</div>
+                  <div style="font-size:48px;font-weight:900;letter-spacing:-.04em;color:${ftaCol};line-height:1;margin-top:10px">${grpFta.toFixed(1)}%</div>
+                  <div style="font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">FTA %</div>
+                  <div style="font-size:11px;color:var(--text-muted)">Weighted average</div>
+                </div>
+                <div style="flex:1;background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;align-self:stretch">
+                  <div class="pres-cap-bar-wrap" style="gap:32px">
+                    <div class="pres-cap-row">
+                      <div class="pres-cap-header">
+                        <span class="pres-cap-label" style="font-size:16px">Accepted</span>
+                        <span class="pres-cap-pct" style="color:#10b981;font-size:32px">${fmt(grpAcc)}</span>
+                      </div>
+                      <div class="pres-cap-track" style="height:20px"><div class="pres-cap-fill" style="width:${(grpAcc/(grpAcc+grpRej+grpRew||1)*100).toFixed(1)}%;background:#10b981"></div></div>
+                    </div>
+                    <div class="pres-cap-row">
+                      <div class="pres-cap-header">
+                        <span class="pres-cap-label" style="font-size:16px">Rejection</span>
+                        <span class="pres-cap-pct" style="color:#ef4444;font-size:32px">${fmt(grpRej)}</span>
+                      </div>
+                      <div class="pres-cap-track" style="height:20px"><div class="pres-cap-fill" style="width:${(grpRej/(grpAcc+grpRej+grpRew||1)*100).toFixed(1)}%;background:#ef4444"></div></div>
+                    </div>
+                    <div class="pres-cap-row">
+                      <div class="pres-cap-header">
+                        <span class="pres-cap-label" style="font-size:16px">Rework</span>
+                        <span class="pres-cap-pct" style="color:#f59e0b;font-size:32px">${fmt(grpRew)}</span>
+                      </div>
+                      <div class="pres-cap-track" style="height:20px"><div class="pres-cap-fill" style="width:${(grpRew/(grpAcc+grpRej+grpRew||1)*100).toFixed(1)}%;background:#f59e0b"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>`,
+            initChartsFn: null
+          });
+
+          presSlides.push({
+            sectionLabel: `Group: <strong style="color:var(--accent-purple);margin-left:6px">${groupName}</strong>`,
+            slideName: `${groupName} — Inventory`,
+            isGroupSection: false,
+            buildFn: () => {
+              if (!invRow) return `
+                <div class="pres-slide-title">Group <span>${groupName}</span> — Inventory</div>
+                <div style="text-align:center;flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:16px">No inventory data available for this group</div>`;
+              const ir = invRow;
+              const netFlow = (ir.fresh_input||0) - (ir.total_output||0);
+              return `
+                <div class="pres-slide-title">Group <span>${groupName}</span> — Inventory</div>
+                <div class="pres-kpi-grid" style="grid-template-columns:repeat(5,1fr); gap: 24px; --pres-kpi-padding: 28px 30px; --pres-kpi-value-size: 42px; --pres-kpi-label-size: 12px; --pres-kpi-sub-size: 13px; --pres-kpi-icon-size: 32px">
+                  ${presKpiCard('var(--accent-blue)','📥','Fresh Input',fmt(ir.fresh_input||0),'Fresh stock entering line','Input','neutral')}
+                  ${presKpiCard('var(--accent-green)','📤','Total Output',fmt(ir.total_output||0),'Completed accepted output','Output','neutral')}
+                  ${presKpiCard('var(--accent-amber)','🔄','WIP Balance',fmt(ir.wip_balance||0),'Current work-in-progress','WIP',ir.wip_balance===0?'up':'neutral')}
+                  ${presKpiCard('var(--accent-purple)','📊','Avg WIP',fmt(ir.avg_wip||0),'Weighted avg WIP over period','Avg WIP','neutral')}
+                  ${presKpiCard(netFlow>=0?'var(--accent-red)':'var(--accent-green)','📉','Net Flow',fmt(Math.abs(netFlow)),netFlow>=0?'Input > Output (buildup)':'Input < Output (clearing)',netFlow>=0?'⚠ Buildup':'✓ Clearing',netFlow>=0?'down':'up')}
+                </div>
+                <div style="display:grid;grid-template-columns:240px 1fr;gap:24px;flex:1;min-height:0;align-items:stretch">
+                  <div style="background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:8px;align-self:stretch">
+                    <div style="font-size:54px;font-weight:900;color:var(--accent-blue);letter-spacing:-.04em;line-height:1">${groupName}</div>
+                    <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">Inventory Ledger</div>
+                  </div>
+                  <div style="background:var(--bg-card);border:1.5px solid var(--border);border-radius:14px;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;align-self:stretch">
+                    <div style="font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px">Full Inventory Ledger</div>
+                    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px">
+                      ${[['Opening WIP',ir.opening_wip,'var(--text-secondary)'],['Stripping',ir.stripping,'var(--text-muted)'],['Returns',ir.returns,'var(--text-muted)'],['Scrap',ir.scrap,'var(--accent-red)'],['Bal Input',ir.bal_input,'var(--accent-purple)']].map(([l,v,c])=>`<div><div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:12px">${l}</div><div style="font-size:38px;font-weight:800;color:${c};font-family:'JetBrains Mono',monospace">${fmt(v||0)}</div></div>`).join('')}
+                    </div>
+                  </div>
+                </div>`;
+            },
+            initChartsFn: null
+          });
+        });
+      }
+    }
+
+    /* ── Chart options for presentation (theme-aware) ── */
+    function presChartOptions({ yMin, yMax } = {}) {
+      const c = getChartDefaults();
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { top: 20 } },
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            display: true,
+            color: c.tickColor,
+            anchor: 'end', align: 'top', offset: -2,
+            font: { weight: '700', size: 9, family: 'Inter, sans-serif' },
+            formatter: v => { if (v===null||v===undefined) return ''; const n=typeof v==='object'?(v.y??0):v; return fmt(n); }
+          },
+          tooltip: { backgroundColor:c.tooltipBg,borderColor:c.tooltipBorder,borderWidth:1,titleColor:c.textPrimary,bodyColor:c.tickColor,padding:12,cornerRadius:10,callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.y??0).toLocaleString()}`} }
+        },
+        scales: {
+          x: { ticks:{color:c.tickColor,font:{size:11}}, grid:{color:c.gridColor}, border:{color:'transparent'} },
+          y: { ticks:{color:c.tickColor,font:{size:11},callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v}, grid:{color:c.gridColor}, border:{color:'transparent'}, min:yMin, max:yMax }
+        }
+      };
+    }
+
+    /* ── Store data when loaded (hook into existing load functions) ── */
+    const _origLoadProd = loadProductionData;
+    // We'll patch the render calls below instead
+
+    /* ══════════════════════════════════════════════════
        INIT
      ══════════════════════════════════════════════════ */
     async function init() {
@@ -3568,6 +4683,15 @@
       await loadMeta();
       await applyFilters();
       document.getElementById('loading-overlay').classList.add('hidden');
+
+      // Presentation clock
+      setInterval(() => {
+        const pClock = document.getElementById('pres-clock');
+        if (pClock) {
+          const now = new Date();
+          pClock.textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' · ' + now.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+        }
+      }, 1000);
       
       // Auto-refresh every 60s
       setInterval(async () => { 
