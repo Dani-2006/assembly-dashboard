@@ -1140,6 +1140,295 @@
         display: none;
       }
     }
+
+    /* ══════════════════════════════════════════════════
+       SHOP CAPACITY BANNER
+    ══════════════════════════════════════════════════ */
+    .shop-capacity-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .shop-stat-card {
+      background: linear-gradient(135deg, rgba(99, 130, 255, 0.08) 0%, rgba(99, 130, 255, 0.02) 100%), var(--bg-card);
+      border: 1.5px solid var(--border-bright);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .shop-stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card), 0 0 30px rgba(99, 130, 255, 0.15);
+    }
+
+    .shop-stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .shop-stat-value {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-blue));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .shop-stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════════════════
+       SLIDESHOW / CAROUSEL
+    ══════════════════════════════════════════════════ */
+    .slideshow-container {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.3s;
+    }
+
+    .slideshow-container:hover {
+      border-color: var(--border-bright);
+    }
+
+    .group-selector-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1.5px solid var(--sep-color);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .group-selector-pills::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .group-selector-pills::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .group-pill {
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      background: rgba(99, 130, 255, 0.05);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+
+    .group-pill:hover {
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+      background: rgba(99, 130, 255, 0.10);
+    }
+
+    .group-pill.active {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 142, 247, 0.3);
+    }
+
+    .slide-card-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .slide-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--accent-blue);
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .slide-nav-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+      border-color: transparent;
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(79, 142, 247, 0.25);
+    }
+
+    .slide-content {
+      flex: 1;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 12px 16px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    /* Split layout inside slide */
+    .slide-left {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .slide-right {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .slide-gauge-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+
+    .slide-gauge-pct {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+
+    .slide-gauge-num {
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .slide-gauge-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .slide-kpi-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .slide-kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99, 130, 255, 0.3);
+    }
+
+    .slide-kpi-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .slide-kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .slide-kpi-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .slide-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 18px;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--track-bg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slide-dot:hover {
+      background: var(--text-secondary);
+    }
+
+    .slide-dot.active {
+      width: 24px;
+      border-radius: 100px;
+      background: var(--accent-blue);
+    }
+
+    .slideshow-autoplay-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    @media(max-width:768px) {
+      .slide-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .slide-left {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -1198,17 +1487,47 @@
 
     <!-- ══ FILTER BAR ══ -->
     <div class="filter-bar">
+      <!-- Month Select -->
       <div class="filter-group">
-        <span class="filter-label">📅 Date</span>
-        <div class="filter-date-mode" style="display: flex; gap: 8px; align-items: center;">
-          <select id="month-picker" class="filter-select" onchange="setDateMode('month')" style="min-width: 150px; border-radius: 8px; padding-top: 6px; padding-bottom: 6px;">
-            <option value="month">Overall Month</option>
-          </select>
-          <button class="filter-date-btn" id="btn-specific" onclick="setDateMode('specific')" style="border-radius: 8px; height: 34px; padding: 0 16px;">Specific Date</button>
-        </div>
-        <input type="date" id="date-picker" class="filter-date-input" onchange="applyFilters()" />
+        <span class="filter-label">📅 Month</span>
+        <select id="month-select" class="filter-select" onchange="handleMonthChange()" style="min-width: 120px;"></select>
       </div>
+
       <div class="filter-separator"></div>
+
+      <!-- Period Select -->
+      <div class="filter-group">
+        <span class="filter-label">⏱️ Period</span>
+        <select id="period-select" class="filter-select" onchange="handlePeriodChange()" style="min-width: 145px;">
+          <option value="month">Entire Month</option>
+          <option value="week">Specific Week</option>
+          <option value="date">Specific Date</option>
+        </select>
+      </div>
+
+      <!-- Week Select (Conditional) -->
+      <div class="filter-group" id="week-filter-group" style="display: none;">
+        <span class="filter-label">🗓️ Week</span>
+        <select id="week-select" class="filter-select" onchange="handleWeekChange()" style="min-width: 220px;"></select>
+      </div>
+
+      <!-- Date Select (Conditional) -->
+      <div class="filter-group" id="date-filter-group" style="display: none;">
+        <span class="filter-label">📌 Date</span>
+        <select id="date-select" class="filter-select" onchange="handleDateChange()" style="min-width: 160px;"></select>
+      </div>
+
+      <div class="filter-separator"></div>
+
+      <!-- Working Days Input -->
+      <div class="filter-group">
+        <span class="filter-label">🛠️ Working Days</span>
+        <input type="number" id="working-days-input" class="filter-select" style="min-width: 80px; width: 90px; text-align: center; padding-right: 12px; background-image: none;" min="1" step="0.5" value="22" onchange="applyFilters()" />
+      </div>
+
+      <div class="filter-separator"></div>
+
+      <!-- Shift Filter -->
       <div class="filter-group">
         <span class="filter-label">🔄 Shift</span>
         <select id="shift-filter" class="filter-select" onchange="applyFilters()">
@@ -1218,14 +1537,20 @@
           <option value="2">Shift 2</option>
         </select>
       </div>
+
       <div class="filter-separator"></div>
+
+      <!-- Model Filter -->
       <div class="filter-group">
         <span class="filter-label">🔧 Model</span>
         <select id="model-filter" class="filter-select" onchange="applyFilters()">
           <option value="all">All Models</option>
         </select>
       </div>
+
       <div class="filter-separator"></div>
+
+      <!-- Group Filter -->
       <div class="filter-group">
         <span class="filter-label">👥 Group</span>
         <select id="group-filter" class="filter-select" onchange="applyFilters()">
@@ -1255,6 +1580,9 @@
       <button class="tab-btn" id="tab-quality" onclick="switchTab('quality')">
         <span class="tab-icon">✅</span>Quality
       </button>
+      <button class="tab-btn" id="tab-inventory" onclick="switchTab('inventory')">
+        <span class="tab-icon">📦</span>Inventory
+      </button>
     </div>
 
     <!-- ══ MAIN ══ -->
@@ -1266,38 +1594,60 @@
         <div class="section-title">Capacity Overview</div>
         <div class="kpi-grid mb-24" id="capacity-kpis"></div>
 
-        <div class="chart-grid chart-grid-2 mb-24">
-          <div class="chart-card">
-            <div class="chart-header">
-              <div>
-                <div class="chart-title">Production Target KPI</div>
-                <div class="chart-subtitle">Planned vs Actuals from Capacity Sheet</div>
-              </div>
-            </div>
-            <div class="capacity-bars" id="target-kpi-bars"></div>
+        <!-- Section: Shop Production Details -->
+        <div class="section-title">Production Details</div>
+        
+        <!-- Shop-level capacity details in bigger fonts -->
+        <div class="shop-capacity-banner mb-24">
+          <div class="shop-stat-card">
+            <span class="shop-stat-label">🏭 Shop Capacity</span>
+            <span class="shop-stat-value" id="shop-capacity-val">26.7K</span>
+            <span class="shop-stat-sub">Max daily physical limit</span>
           </div>
-          <div class="chart-card">
-            <div class="chart-header">
-              <div>
-                <div class="chart-title">Group Capacity Detail</div>
-                <div class="chart-subtitle">Target, Actuals, Achievement % and Balance per group</div>
-              </div>
+          <div class="shop-stat-card">
+            <span class="shop-stat-label">🤝 Agreed Capacity</span>
+            <span class="shop-stat-value" id="shop-agreed-capacity-val">21.6K/day</span>
+            <span class="shop-stat-sub">Planned target daily rate</span>
+          </div>
+          <div class="shop-stat-card">
+            <span class="shop-stat-label">🔄 Rolling Target</span>
+            <span class="shop-stat-value" id="shop-rolling-target-val">475.5K</span>
+            <span class="shop-stat-sub">Cumulative target for the month</span>
+          </div>
+        </div>
+
+        <!-- Group-wise Detail Slideshow Card -->
+        <div class="slideshow-container mb-24 animate-in">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; border-bottom: 1.5px solid var(--sep-color); padding-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div class="chart-title" style="font-size: 15px; font-weight:800;">Group-wise Operational Performance Slideshow</div>
+              <div class="chart-subtitle" style="font-size: 12px; color:var(--text-secondary); margin-top:2px;">Detailed capacity, target volume, actual production, and efficiencies per assembly group</div>
             </div>
-            <div style="overflow-x:auto;max-height:320px;overflow-y:auto">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Group</th>
-                    <th>Capacity</th>
-                    <th>Target/Month</th>
-                    <th>Actuals</th>
-                    <th>Achiev%</th>
-                    <th>Balance</th>
-                  </tr>
-                </thead>
-                <tbody id="capacity-table-body"></tbody>
-              </table>
+            <div class="slideshow-autoplay-controls" style="margin-top:0;">
+              <button id="autoplay-btn" class="btn-refresh" onclick="toggleAutoplay()" style="font-size: 12px; padding: 6px 12px;">
+                ▶ Auto-Play
+              </button>
+              <span id="autoplay-status" style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Paused</span>
             </div>
+          </div>
+
+          <!-- Group Selector Pills -->
+          <div class="group-selector-pills" id="group-pills-container">
+            <!-- Populated dynamically -->
+          </div>
+          
+          <!-- Slide Card Wrap -->
+          <div class="slide-card-wrap">
+            <button class="slide-nav-btn prev-btn" onclick="prevSlide()" aria-label="Previous slide">❮</button>
+            <div class="slide-content" id="active-slide-content">
+              <!-- Dynamically populated group slide -->
+            </div>
+            <button class="slide-nav-btn next-btn" onclick="nextSlide()" aria-label="Next slide">❯</button>
+          </div>
+          
+          <!-- Indicators -->
+          <div class="slide-indicators" id="slide-indicators-container">
+            <!-- Populated dynamically -->
           </div>
         </div>
 
@@ -1308,7 +1658,7 @@
           <span class="data-note-icon">ℹ️</span>
           <span>
             <strong>Production In</strong> = Target Till Date (planned production from Capacity Sheet) &nbsp;|&nbsp;
-            <strong>Production Out</strong> = Actual units produced (Actuals Qty from Capacity Sheet).
+            <strong>Production Out</strong> = Actual nos produced (Actuals Qty from Capacity Sheet).
             Both values come from the same authoritative capacity tracking sheet, ensuring a valid In vs Out comparison.
           </span>
         </div>
@@ -1349,7 +1699,7 @@
                 <div class="legend-dot" style="background:var(--accent-green)"></div>Actual Output
               </div>
               <div class="legend-item">
-                <div class="legend-dot" style="background:var(--accent-amber)"></div>Target Till Date
+                <div class="legend-dot" style="background:var(--accent-amber)"></div>Balance
               </div>
             </div>
           </div>
@@ -1363,6 +1713,13 @@
 
       <!-- ════ TAB 2: QUALITY ════ -->
       <div class="tab-panel" id="panel-quality">
+        <!-- Quality Warning Alert -->
+        <div id="quality-warning-alert" class="data-note" style="display: none; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.22); margin-bottom: 24px;">
+          <span class="data-note-icon">⚠️</span>
+          <span style="color: var(--accent-amber); font-weight: 600;">
+            No specific First Time Acceptance (FTA) data found for this week in the Excel file. Showing overall monthly quality statistics instead.
+          </span>
+        </div>
 
         <div class="section-title">First Time Acceptance (FTA)</div>
         <div class="quality-hero mb-24">
@@ -1377,7 +1734,7 @@
               <div class="kpi-card-accent" style="background:var(--accent-green)"></div>
               <div class="kpi-label">Total Accepted (ACC)</div>
               <div class="kpi-value text-green" id="q-total-acc">–</div>
-              <div class="kpi-sub">Units passed inspection</div>
+              <div class="kpi-sub">Nos passed inspection</div>
               <div class="kpi-icon">✅</div>
             </div>
             <div class="kpi-card">
@@ -1426,7 +1783,7 @@
             <div class="chart-header">
               <div>
                 <div class="chart-title">Rejection by Group</div>
-                <div class="chart-subtitle">Units rejected at lot inspection</div>
+                <div class="chart-subtitle">Nos rejected at lot inspection</div>
               </div>
             </div>
             <div class="chart-wrap" style="height:280px"><canvas id="rejection-chart"></canvas></div>
@@ -1435,7 +1792,7 @@
             <div class="chart-header">
               <div>
                 <div class="chart-title">Rework by Group</div>
-                <div class="chart-subtitle">100% &amp; HE inspection rework units</div>
+                <div class="chart-subtitle">100% &amp; HE inspection rework nos</div>
               </div>
             </div>
             <div class="chart-wrap" style="height:280px"><canvas id="rework-chart"></canvas></div>
@@ -1464,7 +1821,240 @@
           </div>
         </div>
 
+
+        <!-- ──── NEW: Stripping % + LE/HE FTA ──── -->
+        <div class="section-title">IQF Stripping &amp; LE/HE FTA Overview</div>
+        <!-- Row 1: Stripping KPI + LE FTA + HE FTA -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-bottom:20px;">
+          <div class="kpi-card">
+            <div class="kpi-card-accent" style="background:var(--accent-purple)"></div>
+            <div class="kpi-label">Stripping %</div>
+            <div class="kpi-value text-purple" id="q-strip-pct">–</div>
+            <div class="kpi-sub" id="q-strip-nos">Stripped / Output</div>
+            <div class="kpi-icon">🔁</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-accent" style="background:var(--accent-cyan)"></div>
+            <div class="kpi-label">LE FTA % (IQF)</div>
+            <div class="kpi-value" id="q-le-fta" style="color:var(--accent-cyan)">–</div>
+            <div class="kpi-sub" id="q-le-nos">Low End lot inspection</div>
+            <div class="kpi-icon">🔵</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-accent" style="background:var(--accent-teal)"></div>
+            <div class="kpi-label">HE FTA % (IQF)</div>
+            <div class="kpi-value" id="q-he-fta" style="color:var(--accent-teal)">–</div>
+            <div class="kpi-sub" id="q-he-nos">High End lot inspection</div>
+            <div class="kpi-icon">🟢</div>
+          </div>
+        </div>
+
+        <!-- Row 2: LE/HE Monthly trend chart + Stripping monthly -->
+        <div class="chart-grid chart-grid-2 mb-24">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">LE &amp; HE FTA % — Monthly Trend</div>
+                <div class="chart-subtitle">Low End vs High End First Time Acceptance (from FTA file)</div>
+              </div>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot" style="background:var(--accent-cyan)"></span>LE FTA</span>
+                <span class="legend-item"><span class="legend-dot" style="background:var(--accent-teal)"></span>HE FTA</span>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:260px">
+              <canvas id="le-he-fta-chart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Stripping % — Monthly Trend</div>
+                <div class="chart-subtitle">Stripped qty as % of monthly output</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:260px">
+              <canvas id="stripping-monthly-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Top defect types -->
+        <div class="section-title">Defect Type Analysis (LE &amp; HE)</div>
+        <div class="chart-grid chart-grid-2 mb-24">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Low End — Top Defect Types</div>
+                <div class="chart-subtitle">Defect count by category from IQF LE data</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="le-defect-chart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">High End — Top Defect Types</div>
+                <div class="chart-subtitle">Defect count by category from IQF HE data</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="he-defect-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- MOM Group FTA Table -->
+        <div class="section-title">Group-wise FTA % — MOM Summary (CA ASSLY)</div>
+        <div class="chart-card mb-24">
+          <div class="chart-header">
+            <div class="chart-title">Group FTA % — Monthly Output Based</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Output</th>
+                  <th>Shop Rej</th>
+                  <th>IQF Rej</th>
+                  <th>Cum Rej</th>
+                  <th>FTA %</th>
+                </tr>
+              </thead>
+              <tbody id="mom-fta-table-body"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
       </div><!-- /panel-quality -->
+
+      <!-- ════ TAB 3: INVENTORY ════ -->
+      <div class="tab-panel" id="panel-inventory">
+        <!-- Inventory Warning Alert -->
+        <div id="inventory-warning-alert" class="data-note" style="display: none; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.22); margin-bottom: 24px;">
+          <span class="data-note-icon">⚠️</span>
+          <span style="color: var(--accent-amber); font-weight: 600;">
+            No specific Inventory data found for this period in the Excel file. Showing 0 values.
+          </span>
+        </div>
+
+        <div class="section-title">Inventory KPIs</div>
+        <div class="kpi-grid mb-24" id="inventory-kpis">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="section-title">Material Consumption (Adhesives & Gaskets)</div>
+        
+        <div class="data-note mb-24">
+          <span class="data-note-icon">ℹ️</span>
+          <span>
+            Shows adhesive and gasket usage to visualize quantities used by regular groups (G1-G8) and add-on groups (A1-A3).
+          </span>
+        </div>
+
+        <div class="chart-grid chart-grid-2 mb-24">
+          <!-- Group-wise Material Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Adhesives vs Gaskets Usage by Group</div>
+                <div class="chart-subtitle">Quantities consumed (nos) in raw Input sheet</div>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-blue)"></div>Adhesives
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-cyan)"></div>Gaskets
+                </div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="inventory-materials-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Category Summary Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Material Consumption: Regular vs Add-on Groups</div>
+                <div class="chart-subtitle">Comparison of total adhesives & gaskets used</div>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-blue)"></div>Adhesives
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent-cyan)"></div>Gaskets
+                </div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="inventory-category-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Inventory Timeline</div>
+        <div class="chart-card mb-24">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Daily Input, Output, and WIP Balance</div>
+              <div class="chart-subtitle">Tracking flow of materials and active Work-In-Progress balance over time</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-blue)"></div>Daily Input
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-green)"></div>Daily Output
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent-amber)"></div>WIP Balance
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:320px">
+            <canvas id="inventory-timeline-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="section-title">Detailed Group-wise Inventory Breakdown</div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Group-wise Inventory Table</div>
+              <div class="chart-subtitle">Complete ledger of Opening WIP, Fresh Input, returns/losses, Output, and closing WIP balance (nos)</div>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Opening WIP</th>
+                  <th>Fresh Input</th>
+                  <th>Stripping</th>
+                  <th>Returns</th>
+                  <th>Scrap</th>
+                  <th>Bal Input</th>
+                  <th>Total Output</th>
+                  <th>WIP Balance</th>
+                  <th>Avg WIP</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /panel-inventory -->
     </main>
   </div>
 
@@ -1473,9 +2063,18 @@
        STATE
     ══════════════════════════════════════════════════ */
     const API = 'http://localhost:5050/api';
-    let dateMode = 'month';
     let charts = {};
     let currentTheme = localStorage.getItem('dashboard-theme') || 'dark';
+
+    let metaData = null;
+    let selectedMonth = '';
+    let selectedPeriodType = 'month';
+    let selectedWeek = '';
+    let selectedDate = '';
+    
+    let currentSlideGroupIndex = 0;
+    let slideshowGroups = [];
+    let autoplayInterval = null;
 
     // ── Apply stored theme on load ──
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -1519,9 +2118,30 @@
         responsive: true,
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
+        layout: {
+          padding: {
+            top: 22
+          }
+        },
         plugins: {
           legend: { display: false },
-          datalabels: { display: false },
+          datalabels: {
+            display: true,
+            color: c.tickColor,
+            anchor: 'end',
+            align: 'top',
+            offset: -2,
+            font: {
+              weight: '700',
+              size: 9,
+              family: 'Inter, sans-serif'
+            },
+            formatter: (v) => {
+              if (v === null || v === undefined) return '';
+              const val = typeof v === 'object' ? (v.y ?? v.x ?? 0) : v;
+              return fmt(val);
+            }
+          },
           tooltip: {
             backgroundColor: c.tooltipBg,
             borderColor: c.tooltipBorder,
@@ -1575,24 +2195,100 @@
     }
 
     /* ══════════════════════════════════════════════════
-       DATE MODE
+       PERIOD AND DATE FILTER HANDLERS
     ══════════════════════════════════════════════════ */
-    function setDateMode(mode) {
-      dateMode = mode;
-      const monthPicker = document.getElementById('month-picker');
-      const datePicker = document.getElementById('date-picker');
-      const btnSpecific = document.getElementById('btn-specific');
-
-      if (mode === 'month') {
-        monthPicker.classList.add('active');
-        btnSpecific.classList.remove('active');
-        datePicker.classList.remove('visible');
-      } else {
-        monthPicker.classList.remove('active');
-        btnSpecific.classList.add('active');
-        datePicker.classList.add('visible');
+    function handleMonthChange(init = false) {
+      const monthSelect = document.getElementById('month-select');
+      if (!monthSelect || !metaData) return;
+      selectedMonth = monthSelect.value;
+      
+      // Update week selector options based on month
+      const weekSelect = document.getElementById('week-select');
+      weekSelect.innerHTML = '';
+      const weeks = metaData.month_weeks[selectedMonth] || [];
+      weeks.forEach(w => {
+        weekSelect.innerHTML += `<option value="${w.id}">${w.label}</option>`;
+      });
+      if (weeks.length > 0) {
+        selectedWeek = weeks[0].id;
+        weekSelect.value = selectedWeek;
       }
+      
+      // Update date selector options based on month
+      const dateSelect = document.getElementById('date-select');
+      dateSelect.innerHTML = '';
+      const dates = weeks.reduce((acc, w) => acc.concat(w.dates), []);
+      dates.sort();
+      dates.forEach(d => {
+        try {
+          const parts = d.split('-');
+          const dtObj = new Date(parts[0], parts[1]-1, parts[2]);
+          const lbl = dtObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+          dateSelect.innerHTML += `<option value="${d}">${lbl}</option>`;
+        } catch {
+          dateSelect.innerHTML += `<option value="${d}">${d}</option>`;
+        }
+      });
+      if (dates.length > 0) {
+        selectedDate = dates[dates.length - 1]; // select last production date of the month
+        dateSelect.value = selectedDate;
+      }
+      
+      updateDefaultWorkingDays();
+      if (!init) {
+        applyFilters();
+      }
+    }
+
+    function handlePeriodChange() {
+      const periodSelect = document.getElementById('period-select');
+      selectedPeriodType = periodSelect.value;
+      
+      const weekFilterGroup = document.getElementById('week-filter-group');
+      const dateFilterGroup = document.getElementById('date-filter-group');
+      
+      if (selectedPeriodType === 'month') {
+        weekFilterGroup.style.display = 'none';
+        dateFilterGroup.style.display = 'none';
+      } else if (selectedPeriodType === 'week') {
+        weekFilterGroup.style.display = 'flex';
+        dateFilterGroup.style.display = 'none';
+      } else if (selectedPeriodType === 'date') {
+        weekFilterGroup.style.display = 'none';
+        dateFilterGroup.style.display = 'flex';
+      }
+      
+      updateDefaultWorkingDays();
       applyFilters();
+    }
+
+    function handleWeekChange() {
+      selectedWeek = document.getElementById('week-select').value;
+      updateDefaultWorkingDays();
+      applyFilters();
+    }
+
+    function handleDateChange() {
+      selectedDate = document.getElementById('date-select').value;
+      updateDefaultWorkingDays();
+      applyFilters();
+    }
+
+    function updateDefaultWorkingDays() {
+      const input = document.getElementById('working-days-input');
+      if (!metaData) return;
+      
+      if (selectedPeriodType === 'month') {
+        const weeks = metaData.month_weeks[selectedMonth] || [];
+        const dates = weeks.reduce((acc, w) => acc.concat(w.dates), []);
+        input.value = dates.length || 22;
+      } else if (selectedPeriodType === 'week') {
+        const weeks = metaData.month_weeks[selectedMonth] || [];
+        const weekObj = weeks.find(w => w.id === selectedWeek);
+        input.value = weekObj ? weekObj.dates.length : 6;
+      } else if (selectedPeriodType === 'date') {
+        input.value = 1.0;
+      }
     }
 
     /* ══════════════════════════════════════════════════
@@ -1603,29 +2299,313 @@
       const model = document.getElementById('model-filter').value;
       const group = document.getElementById('group-filter').value;
       
-      let dateVal = 'month';
-      if (dateMode === 'month') {
-        dateVal = document.getElementById('month-picker').value;
-      } else {
-        dateVal = document.getElementById('date-picker').value;
+      let dateVal = selectedMonth;
+      let datesParam = '';
+      
+      if (selectedPeriodType === 'month') {
+        dateVal = selectedMonth;
+      } else if (selectedPeriodType === 'week') {
+        const weeks = (metaData && metaData.month_weeks && metaData.month_weeks[selectedMonth]) || [];
+        const weekObj = weeks.find(w => w.id === selectedWeek);
+        if (weekObj) {
+          datesParam = weekObj.dates.join(',');
+        }
+      } else if (selectedPeriodType === 'date') {
+        dateVal = selectedDate;
+        datesParam = selectedDate;
       }
       
       return {
         date: dateVal,
+        dates: datesParam,
         shift: shift,
         model: model,
-        group: group
+        group: group,
+        week: selectedWeek
       };
-    }
-
-    function buildQ(f) {
-      return new URLSearchParams(f).toString();
     }
 
     async function applyFilters() {
       const f = getFilters();
       await loadProductionData(f);
       await loadQualityData(f);
+      await loadInventoryData(f);
+    }
+
+    /* ══════════════════════════════════════════════════
+       INVENTORY DATA LOADING & RENDERING
+    ══════════════════════════════════════════════════ */
+    async function loadInventoryData(f) {
+      try {
+        const queryParams = new URLSearchParams();
+        if (f.dates) {
+          queryParams.append('dates', f.dates);
+        } else {
+          queryParams.append('date', f.date);
+        }
+        queryParams.append('group', f.group);
+        queryParams.append('model', f.model);
+        
+        const r = await fetch(`${API}/inventory?${queryParams.toString()}`);
+        const d = await r.json();
+        
+        const hasData = d.timeline && d.timeline.dates && d.timeline.dates.length > 0;
+        const alertEl = document.getElementById('inventory-warning-alert');
+        if (alertEl) {
+          alertEl.style.display = hasData ? 'none' : 'flex';
+        }
+        
+        renderInventoryKPIs(d.flow);
+        renderInventoryCharts(d.timeline, d.materials);
+        renderInventoryTable(d.groupwise);
+      } catch (e) {
+        console.error('Inventory Error:', e);
+      }
+    }
+
+    function renderInventoryKPIs(flow) {
+      const card = (accentColor, icon, label, displayVal, subText, badgeText, badgeClass) => {
+        return `
+        <div class="kpi-card animate-in">
+          <div class="kpi-card-accent" style="background:${accentColor}"></div>
+          <div class="kpi-icon">${icon}</div>
+          <div class="kpi-label">${label}</div>
+          <div class="kpi-value" style="color:${accentColor}">${displayVal}</div>
+          <div class="kpi-sub">${subText}</div>
+          <span class="kpi-badge ${badgeClass}">${badgeText}</span>
+        </div>`;
+      };
+
+      document.getElementById('inventory-kpis').innerHTML =
+        card('var(--accent-blue)', '📥', 'Total Fresh Input', fmt(flow.fresh_input), 'Fresh stock entering assembly lines', 'Fresh Input', 'neutral') +
+        card('var(--accent-green)', '📤', 'Total Output', fmt(flow.total_output), 'Completed accepted cases output', 'Total Output', 'neutral') +
+        card('var(--accent-amber)', '🔄', 'Active WIP Balance', fmt(flow.wip_balance), 'Current work-in-progress on floor', 'WIP Balance', 'neutral') +
+        card('var(--accent-purple)', '📊', 'Average WIP', fmt(flow.avg_wip), 'Weighted avg WIP over period', 'Avg WIP', 'neutral');
+    }
+
+    function renderInventoryCharts(timeline, materials) {
+      // 1. Group-wise Materials Usage Chart
+      const groups = materials.groups.map(g => g.group);
+      const adheData = materials.groups.map(g => g.adhe);
+      const gaskData = materials.groups.map(g => g.gask);
+
+      if (charts.invMaterials) charts.invMaterials.destroy();
+      charts.invMaterials = new Chart(document.getElementById('inventory-materials-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: groups,
+          datasets: [
+            {
+              label: 'Adhesives',
+              data: adheData,
+              backgroundColor: 'rgba(79,142,247,0.65)',
+              borderColor: 'var(--accent-blue)',
+              borderWidth: 1.5,
+              borderRadius: 4
+            },
+            {
+              label: 'Gaskets',
+              data: gaskData,
+              backgroundColor: 'rgba(34,211,238,0.65)',
+              borderColor: 'var(--accent-cyan)',
+              borderWidth: 1.5,
+              borderRadius: 4
+            }
+          ]
+        },
+        options: chartOptions({ yLabel: 'Nos' })
+      });
+
+      // 2. Category Summary Chart
+      if (charts.invCategory) charts.invCategory.destroy();
+      charts.invCategory = new Chart(document.getElementById('inventory-category-chart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Regular groups (G1-G8)', 'Add-on groups (A1-A3)'],
+          datasets: [
+            {
+              label: 'Adhesives',
+              data: [materials.regular.adhe, materials.addon.adhe],
+              backgroundColor: 'rgba(79,142,247,0.65)',
+              borderColor: 'var(--accent-blue)',
+              borderWidth: 1.5,
+              borderRadius: 4
+            },
+            {
+              label: 'Gaskets',
+              data: [materials.regular.gask, materials.addon.gask],
+              backgroundColor: 'rgba(34,211,238,0.65)',
+              borderColor: 'var(--accent-cyan)',
+              borderWidth: 1.5,
+              borderRadius: 4
+            }
+          ]
+        },
+        options: chartOptions({ yLabel: 'Nos' })
+      });
+
+      // 3. Timeline Chart — rich colour variance
+      if (charts.invTimeline) charts.invTimeline.destroy();
+      const tlCtx = document.getElementById('inventory-timeline-chart').getContext('2d');
+
+      // Build gradient fills
+      const chartH = tlCtx.canvas.offsetHeight || 300;
+
+      const gradInput = tlCtx.createLinearGradient(0, 0, 0, chartH);
+      gradInput.addColorStop(0, 'rgba(79,142,247,0.55)');
+      gradInput.addColorStop(0.55, 'rgba(79,142,247,0.18)');
+      gradInput.addColorStop(1, 'rgba(79,142,247,0.02)');
+
+      const gradOutput = tlCtx.createLinearGradient(0, 0, 0, chartH);
+      gradOutput.addColorStop(0, 'rgba(16,185,129,0.55)');
+      gradOutput.addColorStop(0.55, 'rgba(16,185,129,0.18)');
+      gradOutput.addColorStop(1, 'rgba(16,185,129,0.02)');
+
+      const gradWIP = tlCtx.createLinearGradient(0, 0, 0, chartH);
+      gradWIP.addColorStop(0, 'rgba(245,158,11,0.65)');
+      gradWIP.addColorStop(0.4, 'rgba(251,113,133,0.35)');
+      gradWIP.addColorStop(1, 'rgba(245,158,11,0.04)');
+
+      // Segment colour: WIP line turns red when rising, green when falling
+      const wipData = timeline.wip || [];
+      const wipSegmentColor = (ctx) => {
+        const i = ctx.p0DataIndex;
+        const prev = wipData[i] ?? 0;
+        const curr = wipData[i + 1] ?? 0;
+        return curr > prev ? 'rgba(251,113,133,0.9)' : 'rgba(52,211,153,0.9)';
+      };
+
+      charts.invTimeline = new Chart(tlCtx, {
+        type: 'line',
+        data: {
+          labels: (timeline.dates || []).map(d => {
+            try {
+              const parts = d.split('-');
+              const dt = new Date(parts[0], parts[1]-1, parts[2]);
+              return dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            } catch { return d; }
+          }),
+          datasets: [
+            {
+              label: 'Daily Input',
+              data: timeline.input,
+              borderColor: '#4f8ef7',
+              backgroundColor: gradInput,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#4f8ef7',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 6,
+              tension: 0.35,
+              fill: true,
+              order: 3
+            },
+            {
+              label: 'Daily Output',
+              data: timeline.output,
+              borderColor: '#10b981',
+              backgroundColor: gradOutput,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#10b981',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 6,
+              tension: 0.35,
+              fill: true,
+              order: 2
+            },
+            {
+              label: 'WIP Balance',
+              data: timeline.wip,
+              borderColor: '#f59e0b',
+              backgroundColor: gradWIP,
+              borderWidth: 3,
+              pointRadius: 5,
+              pointBackgroundColor: wipData.map((v, i) =>
+                i > 0 && v > wipData[i-1] ? '#fb7185' : '#34d399'
+              ),
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointHoverRadius: 7,
+              tension: 0.35,
+              fill: true,
+              order: 1,
+              segment: {
+                borderColor: wipSegmentColor,
+                borderWidth: ctx => (ctx.p0DataIndex % 2 === 0 ? 3.5 : 3)
+              }
+            }
+          ]
+        },
+        options: {
+          ...chartOptions({ yLabel: 'Nos' }),
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            ...chartOptions({ yLabel: 'Nos' }).plugins,
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                color: '#94a3b8',
+                usePointStyle: true,
+                pointStyle: 'circle',
+                padding: 18,
+                font: { size: 12, family: "'Inter', sans-serif" }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,0.92)',
+              borderColor: 'rgba(255,255,255,0.08)',
+              borderWidth: 1,
+              callbacks: {
+                label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} nos`,
+                afterBody: (items) => {
+                  const inp = items.find(i => i.dataset.label === 'Daily Input')?.parsed.y || 0;
+                  const out = items.find(i => i.dataset.label === 'Daily Output')?.parsed.y || 0;
+                  const diff = inp - out;
+                  return diff >= 0 ? [`  \u2191 Net +${diff.toLocaleString()} nos added`] : [`  \u2193 Net ${diff.toLocaleString()} nos cleared`];
+                }
+              }
+            },
+            datalabels: {
+              display: ctx => ctx.datasetIndex === 2,
+              align: 'top',
+              anchor: 'end',
+              color: ctx => {
+                const i = ctx.dataIndex;
+                const d = ctx.dataset.data;
+                return i > 0 && d[i] > d[i-1] ? '#fb7185' : '#34d399';
+              },
+              font: { size: 10, weight: '700', family: "'JetBrains Mono', mono" },
+              formatter: v => v ? v.toLocaleString() : ''
+            }
+          }
+        }
+      });
+    }
+
+    function renderInventoryTable(groupwise) {
+      const tbody = document.getElementById('inventory-table-body');
+      if (!groupwise || !groupwise.length) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:24px">No inventory breakdown available</td></tr>';
+        return;
+      }
+      tbody.innerHTML = groupwise.map(g => `
+        <tr>
+          <td><strong>${g.group}</strong></td>
+          <td style="font-family:'JetBrains Mono',mono">${fmt(g.opening_wip)}</td>
+          <td style="color:var(--accent-blue);font-family:'JetBrains Mono',mono">${fmt(g.fresh_input)}</td>
+          <td style="color:var(--text-muted);font-family:'JetBrains Mono',mono">${fmt(g.stripping)}</td>
+          <td style="color:var(--text-muted);font-family:'JetBrains Mono',mono">${fmt(g.returns)}</td>
+          <td style="color:var(--text-muted);font-family:'JetBrains Mono',mono">${fmt(g.scrap)}</td>
+          <td style="color:var(--accent-purple);font-family:'JetBrains Mono',mono">${fmt(g.bal_input)}</td>
+          <td style="color:var(--accent-green);font-family:'JetBrains Mono',mono">${fmt(g.total_output)}</td>
+          <td style="color:var(--accent-amber);font-weight:700;font-family:'JetBrains Mono',mono">${fmt(g.wip_balance)}</td>
+          <td style="font-family:'JetBrains Mono',mono">${fmt(g.avg_wip)}</td>
+        </tr>
+      `).join('');
     }
 
     /* ══════════════════════════════════════════════════
@@ -1634,31 +2614,26 @@
     async function loadMeta() {
       try {
         const r = await fetch(`${API}/meta`);
-        const d = await r.json();
+        metaData = await r.json();
         
-        const monthPicker = document.getElementById('month-picker');
-        monthPicker.innerHTML = '<option value="month">Overall Month</option>';
-        d.months.forEach(m => {
-          monthPicker.innerHTML += `<option value="${m}">${m}</option>`;
+        const monthSelect = document.getElementById('month-select');
+        monthSelect.innerHTML = '';
+        metaData.months.forEach(m => {
+          monthSelect.innerHTML += `<option value="${m}">${m}</option>`;
         });
-        if (d.months && d.months.length > 0) {
-          monthPicker.value = d.months[d.months.length - 1];
+        if (metaData.months && metaData.months.length > 0) {
+          selectedMonth = metaData.months[metaData.months.length - 1];
+          monthSelect.value = selectedMonth;
         }
 
         const modelPicker = document.getElementById('model-filter');
         modelPicker.innerHTML = '<option value="all">All Models</option>';
-        d.models.forEach(m => {
+        metaData.models.forEach(m => {
           modelPicker.innerHTML += `<option value="${m}">${m}</option>`;
         });
 
-        const datePicker = document.getElementById('date-picker');
-        if (d.dates && d.dates.length > 0) {
-          datePicker.min = d.dates[0];
-          datePicker.max = d.dates[d.dates.length - 1];
-          datePicker.value = d.dates[d.dates.length - 1];
-        } else {
-          datePicker.value = new Date().toISOString().slice(0, 10);
-        }
+        // Initialize selectors
+        handleMonthChange(true);
       } catch (e) {
         console.error('Meta:', e);
       }
@@ -1675,34 +2650,99 @@
     }
 
     /* ══════════════════════════════════════════════════
-       PRODUCTION DATA
+       PRODUCTION DATA LOADING
     ══════════════════════════════════════════════════ */
     async function loadProductionData(f) {
       try {
-        const r = await fetch(`${API}/production?${buildQ(f)}`);
+        const queryParams = new URLSearchParams();
+        if (f.dates) {
+          queryParams.append('dates', f.dates);
+        } else {
+          queryParams.append('date', f.date);
+        }
+        queryParams.append('shift', f.shift);
+        queryParams.append('model', f.model);
+        queryParams.append('group', f.group);
+        
+        const workingDaysEl = document.getElementById('working-days-input');
+        if (workingDaysEl) {
+          queryParams.append('working_days', workingDaysEl.value);
+        }
+
+        const r = await fetch(`${API}/production?${queryParams.toString()}`);
         const d = await r.json();
+        
         renderCapacityKPIs(d.flow, d.capacity_detail);
-        renderTargetKPIBars(d.flow);
-        renderCapacityTable(d.capacity_detail);
+        renderSlideshow(d.capacity_detail);
         renderFlowChart(d.flow, d.groupwise, d.capacity_detail);
         renderGroupwiseChart(d.groupwise);
       } catch (e) { console.error('Production:', e); }
     }
 
     /* ══════════════════════════════════════════════════
-       QUALITY DATA
+       QUALITY DATA LOADING
     ══════════════════════════════════════════════════ */
     async function loadQualityData(f) {
       try {
-        const r = await fetch(`${API}/quality?${buildQ(f)}`);
+        const queryParams = new URLSearchParams();
+        queryParams.append('date', f.date);
+        queryParams.append('group', f.group);
+        if (selectedPeriodType === 'week') {
+          queryParams.append('week', f.week);
+        }
+        
+        const r = await fetch(`${API}/quality?${queryParams.toString()}`);
         const d = await r.json();
-        renderQualityKPIs(d.overall);
-        renderFTAGauge(d.overall.fta_pct);
-        renderFTAGroupChart(d.groupwise);
-        renderRejectionChart(d.groupwise);
-        renderReworkChart(d.groupwise);
-        renderQualityTable(d.groupwise);
+
+        // Also load FTA detail (LE/HE/stripping) from new endpoint
+        const ftaDetailParams = new URLSearchParams();
+        ftaDetailParams.append('date', f.date);
+        ftaDetailParams.append('group', f.group);
+        const rFta = await fetch(`${API}/fta_detail?${ftaDetailParams.toString()}`);
+        const dFta = await rFta.json();
+        
+        const isWeek = selectedPeriodType === 'week';
+        const hasData = d.groupwise && d.groupwise.groups && d.groupwise.groups.length > 0;
+        
+        if (isWeek && !hasData) {
+          // Fallback to month average
+          const monthQuery = new URLSearchParams();
+          monthQuery.append('date', selectedMonth);
+          monthQuery.append('group', f.group);
+          
+          const rMonth = await fetch(`${API}/quality?${monthQuery.toString()}`);
+          const dMonth = await rMonth.json();
+          
+          renderQualityKPIs(dMonth.overall);
+          renderFTAGauge(dMonth.overall.fta_pct);
+          renderFTAGroupChart(dMonth.groupwise);
+          renderRejectionChart(dMonth.groupwise);
+          renderReworkChart(dMonth.groupwise);
+          renderQualityTable(dMonth.groupwise);
+          
+          showQualityWarning(true);
+        } else {
+          renderQualityKPIs(d.overall);
+          renderFTAGauge(d.overall.fta_pct);
+          renderFTAGroupChart(d.groupwise);
+          renderRejectionChart(d.groupwise);
+          renderReworkChart(d.groupwise);
+          renderQualityTable(d.groupwise);
+          
+          showQualityWarning(false);
+        }
+
+        // Render FTA detail sections (LE/HE/stripping/defects)
+        renderFTADetail(dFta);
+
       } catch (e) { console.error('Quality:', e); }
+    }
+
+    function showQualityWarning(show) {
+      const alertEl = document.getElementById('quality-warning-alert');
+      if (alertEl) {
+        alertEl.style.display = show ? 'flex' : 'none';
+      }
     }
 
     /* ══════════════════════════════════════════════════
@@ -1718,13 +2758,29 @@
     }
 
     /* ══════════════════════════════════════════════════
-       RENDER: Capacity KPI Cards
-    ══════════════════════════════════════════════════ */
+       RENDER: 6 Capacity & Rate KPI Cards
+       Target Vol, Target Rate, Actual Vol, Actual Rate, Volume Eff, Rate Eff
+     ══════════════════════════════════════════════════ */
     function renderCapacityKPIs(flow, detail) {
-      const card = (accentColor, icon, label, displayVal, subText, badges) => {
-        const isPct = displayVal.toString().includes('%');
-        const pctNum = isPct ? parseFloat(displayVal) : 100;
-        const badgeClass = pctNum >= 100 ? 'up' : pctNum >= 85 ? 'neutral' : 'down';
+      const workingDays = parseFloat(document.getElementById('working-days-input').value) || 1.0;
+      const groupFilter = document.getElementById('group-filter').value;
+      
+      let targetRate = 0;
+      if (groupFilter.toLowerCase() === 'all' || groupFilter.toLowerCase() === 'overall') {
+        targetRate = detail.reduce((acc, c) => acc + (c.rate_per_day * 1000), 0);
+      } else {
+        const groupDetail = detail.find(c => c.group.toUpperCase() === groupFilter.toUpperCase());
+        targetRate = groupDetail ? (groupDetail.rate_per_day * 1000) : 0;
+      }
+
+      const targetVolume = targetRate * workingDays;
+      const actualVolume = flow.actuals || 0;
+      const actualRate = actualVolume / workingDays;
+      
+      const volumeEfficiency = targetVolume > 0 ? (actualVolume / targetVolume) * 100 : 0.0;
+      const rateEfficiency = targetRate > 0 ? (actualRate / targetRate) * 100 : 0.0;
+
+      const card = (accentColor, icon, label, displayVal, subText, badgeText, badgeClass) => {
         return `
         <div class="kpi-card animate-in">
           <div class="kpi-card-accent" style="background:${accentColor}"></div>
@@ -1732,114 +2788,208 @@
           <div class="kpi-label">${label}</div>
           <div class="kpi-value" style="color:${accentColor}">${displayVal}</div>
           <div class="kpi-sub">${subText}</div>
-          <span class="kpi-badge ${badgeClass}">${badges}</span>
+          <span class="kpi-badge ${badgeClass}">${badgeText}</span>
         </div>`;
       };
 
-      const isSpecific = dateMode === 'specific';
+      const getBadgeClass = (pct) => pct >= 100 ? 'up' : pct >= 90 ? 'neutral' : 'down';
+      const getBadgeText = (pct) => pct >= 100 ? '✓ Met' : pct >= 90 ? '≈ Progressing' : '⚠ Below Target';
 
-      if (isSpecific) {
-        // Daily View (Specific Date)
-        const pctTill = flow.pct_till_date || 0;
-        const balance = Math.max(0, flow.target_till_date - flow.actuals);
-        
-        document.getElementById('capacity-kpis').innerHTML =
-          card('var(--accent-blue)', '🎯', 'Daily Target',
-            fmt(flow.target_till_date), 'Planned production rate', 'Target Rate') +
-          card('var(--accent-green)', '🏭', 'Daily Actual',
-            fmt(flow.actuals), 'Units completed today', 'Actual Output') +
-          card('var(--accent-cyan)', '⚡', 'Daily Achievement',
-            pctTill.toFixed(1) + '%', `${fmt(flow.actuals)} / ${fmt(flow.target_till_date)} units`,
-            pctTill >= 100 ? '✓ On Track' : pctTill >= 85 ? '≈ Progressing' : '⚠ Below Target') +
-          card('var(--accent-amber)', '📊', 'Daily Balance',
-            balance <= 0 ? '✓ Met' : fmt(balance), 'Remaining to daily target',
-            balance <= 0 ? '✓ Target Achieved' : `Shortfall: ${fmt(balance)}`);
-      } else {
-        // Monthly View / Overall
-        const pctTill = flow.pct_till_date || 0;
-        const pctMonth = flow.pct_month || 0;
-        const balance = Math.max(0, flow.target_month - flow.actuals);
+      document.getElementById('capacity-kpis').innerHTML =
+        card('var(--accent-blue)', '🗓', 'Target Volume', fmt(targetVolume), `Target for ${workingDays} working days`, 'Target Vol', 'neutral') +
+        card('var(--accent-cyan)', '⚡', 'Target Rate', fmt(targetRate) + '/day', 'Planned daily production rate', 'Target Rate', 'neutral') +
+        card('var(--accent-green)', '🏭', 'Actual Volume', fmt(actualVolume), `Produced during this period`, 'Actual Vol', 'neutral') +
+        card('var(--accent-teal)', '📈', 'Actual Rate', fmt(actualRate) + '/day', `Avg production per working day`, 'Actual Rate', 'neutral') +
+        card('var(--accent-amber)', '🏆', 'Volume Efficiency', volumeEfficiency.toFixed(1) + '%', `${fmt(actualVolume)} / ${fmt(targetVolume)} nos`, getBadgeText(volumeEfficiency), getBadgeClass(volumeEfficiency)) +
+        card('var(--accent-purple)', '📊', 'Rate Efficiency', rateEfficiency.toFixed(1) + '%', `Actual rate vs target rate`, getBadgeText(rateEfficiency), getBadgeClass(rateEfficiency));
 
-        document.getElementById('capacity-kpis').innerHTML =
-          card('var(--accent-blue)', '🗓', 'Month Target',
-            fmt(flow.target_month), 'Total monthly planned target', 'Planned Target') +
-          card('var(--accent-cyan)', '📅', 'Target Till Date',
-            fmt(flow.target_till_date), `Planned target up to date`, 'Target Till Date') +
-          card('var(--accent-green)', '🏆', 'Month Achievement',
-            pctMonth.toFixed(1) + '%', `${fmt(flow.actuals)} / ${fmt(flow.target_month)} units`,
-            pctMonth >= 100 ? '✓ Achieved' : pctMonth >= 90 ? '≈ On Target' : '⚠ Below Plan') +
-          card('var(--accent-amber)', '📊', 'Month Balance',
-            balance <= 0 ? '✓ Met' : fmt(balance), 'Remaining to monthly target',
-            balance <= 0 ? '✓ Target Achieved' : `Shortfall: ${fmt(balance)}`);
-      }
+      // Render high-level shop stats (totals)
+      const shopCapacity = detail.reduce((acc, c) => acc + c.capacity, 0) * 1000;
+      const shopAgreed = detail.reduce((acc, c) => acc + c.rate_per_day, 0) * 1000;
+      const shopRolling = detail.reduce((acc, c) => acc + c.target_till_date, 0);
+
+      document.getElementById('shop-capacity-val').textContent = fmt(shopCapacity);
+      document.getElementById('shop-agreed-capacity-val').textContent = fmt(shopAgreed) + '/day';
+      document.getElementById('shop-rolling-target-val').textContent = fmt(shopRolling);
     }
 
     /* ══════════════════════════════════════════════════
-       RENDER: Target KPI Bars
-    ══════════════════════════════════════════════════ */
-    function renderTargetKPIBars(flow) {
-      const isSpecific = dateMode === 'specific';
-      const rows = isSpecific ? [
-        { label: 'Daily Target', val: flow.target_till_date, actual: flow.actuals, color: 'var(--accent-blue)' },
-        { label: 'Daily Achievement %', val: 100, actual: flow.pct_till_date, color: 'var(--accent-green)', isPct: true }
-      ] : [
-        { label: 'Monthly Target', val: flow.target_month, actual: flow.actuals, color: 'var(--accent-blue)' },
-        { label: 'Target Till Date', val: flow.target_till_date, actual: flow.actuals, color: 'var(--accent-cyan)' },
-        { label: 'Till-Date Achievement %', val: 100, actual: flow.pct_till_date, color: 'var(--accent-green)', isPct: true },
-        { label: 'Month Achievement %', val: 100, actual: flow.pct_month, color: 'var(--accent-amber)', isPct: true }
-      ];
-
-      document.getElementById('target-kpi-bars').innerHTML = rows.map(r => {
-        const pct = r.isPct ? Math.min(r.actual, 120) : (r.val > 0 ? Math.min(Math.round(r.actual / r.val * 100), 120) : 0);
-        const display = r.isPct ? `${r.actual.toFixed(1)}%` : `${Math.round(pct)}%`;
-        const sub = r.isPct ? '' : `${fmt(r.actual)} / ${fmt(r.val)}`;
-        return `<div class="cap-row">
-        <div class="cap-row-header">
-          <span class="cap-row-label">${r.label}</span>
-          <span style="display:flex;align-items:baseline;gap:8px">
-            <span class="cap-row-pct" style="color:${r.color}">${display}</span>
-            ${sub ? `<span class="cap-row-vals">${sub}</span>` : ''}
-          </span>
-        </div>
-        <div class="cap-track">
-          <div class="cap-fill" style="width:${Math.min(pct, 100)}%;background:${r.color}"></div>
-        </div>
-      </div>`;
-      }).join('');
-    }
-
-    /* ══════════════════════════════════════════════════
-       RENDER: Capacity Table
-    ══════════════════════════════════════════════════ */
-    function renderCapacityTable(detail) {
-      const tbody = document.getElementById('capacity-table-body');
-      if (!detail || !detail.length) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">No data</td></tr>';
+       RENDER: Group-wise slideshow
+     ══════════════════════════════════════════════════ */
+    function renderSlideshow(detail) {
+      if (!detail || detail.length === 0) {
+        document.getElementById('active-slide-content').innerHTML = `
+          <div style="text-align:center;width:100%;color:var(--text-muted);padding:24px">No group details available</div>`;
         return;
       }
-      tbody.innerHTML = detail.map(c => {
-        const pct = c.month_pct * 100;
-        const col = pct >= 100 ? 'var(--accent-green)' : pct >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
-        const bal = c.balance_month;
-        return `<tr>
-        <td><strong>${c.group}</strong></td>
-        <td style="font-family:'JetBrains Mono',mono;color:var(--text-secondary)">${c.capacity.toFixed(2)}</td>
-        <td style="font-family:'JetBrains Mono',mono">${fmt(c.target_month)}</td>
-        <td style="font-family:'JetBrains Mono',mono">${fmt(c.actuals_qty)}</td>
-        <td><span style="color:${col};font-weight:700">${pct.toFixed(1)}%</span></td>
-        <td style="color:${bal <= 0 ? 'var(--accent-green)' : 'var(--accent-amber)'}">
-          ${bal <= 0 ? '✓ Done' : fmt(bal)}
-        </td>
-      </tr>`;
-      }).join('');
+      
+      slideshowGroups = detail;
+      
+      if (currentSlideGroupIndex >= slideshowGroups.length) {
+        currentSlideGroupIndex = 0;
+      }
+      
+      const pillsContainer = document.getElementById('group-pills-container');
+      pillsContainer.innerHTML = slideshowGroups.map((c, idx) => `
+        <button class="group-pill ${idx === currentSlideGroupIndex ? 'active' : ''}" onclick="jumpToSlide(${idx})">
+          ${c.group}
+        </button>`).join('');
+        
+      const indicatorsContainer = document.getElementById('slide-indicators-container');
+      indicatorsContainer.innerHTML = slideshowGroups.map((c, idx) => `
+        <span class="slide-dot ${idx === currentSlideGroupIndex ? 'active' : ''}" onclick="jumpToSlide(${idx})"></span>`).join('');
+        
+      renderActiveSlide();
+    }
+
+    function renderActiveSlide() {
+      if (slideshowGroups.length === 0) return;
+      
+      document.querySelectorAll('.group-pill').forEach((p, idx) => {
+        if (idx === currentSlideGroupIndex) p.classList.add('active');
+        else p.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.slide-dot').forEach((d, idx) => {
+        if (idx === currentSlideGroupIndex) d.classList.add('active');
+        else d.classList.remove('active');
+      });
+      
+      const c = slideshowGroups[currentSlideGroupIndex];
+      const workingDays = parseFloat(document.getElementById('working-days-input').value) || 1.0;
+      
+      const capPerDay = c.capacity * 1000;
+      const ratePerDay = c.rate_per_day * 1000;
+      const targetVol = ratePerDay * workingDays;
+      const actualVol = c.actuals_qty;
+      const eff = targetVol > 0 ? (actualVol / targetVol) * 100 : 0.0;
+      const balance = Math.max(0, targetVol - actualVol);
+
+      // Dynamically calculate remaining working days in the month and new required rate
+      const weeks = (metaData && metaData.month_weeks && metaData.month_weeks[selectedMonth]) || [];
+      const totalMonthDays = weeks.reduce((acc, w) => acc.concat(w.dates), []).length || 20;
+      const remainingDays = Math.max(1, totalMonthDays - workingDays);
+      const lackingRate = balance / remainingDays;
+      const calculatedReqRate = ratePerDay + lackingRate;
+
+      const effCol = eff >= 100 ? 'var(--accent-green)' : eff >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+      
+      const slideContent = `
+        <div class="slide-left">
+          <div style="font-size: 28px; font-weight: 800; color: var(--accent-blue);">${c.group}</div>
+          <div class="slide-gauge-wrap">
+            <canvas id="slide-group-gauge" width="160" height="160"></canvas>
+            <div class="slide-gauge-pct">
+              <span class="slide-gauge-num" style="color:${effCol}">${eff.toFixed(1)}%</span>
+              <span class="slide-gauge-label">Efficiency</span>
+            </div>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; color:${effCol}">${eff >= 100 ? '✓ Target Met' : eff >= 90 ? '≈ On Target' : '⚠ Below Target'}</div>
+        </div>
+        <div class="slide-right">
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">🏭 Daily Capacity</span>
+            <span class="slide-kpi-value text-blue">${fmt(capPerDay)}/day</span>
+            <span class="slide-kpi-sub">Max physical capacity limit</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">🎯 Target Volume</span>
+            <span class="slide-kpi-value text-cyan">${fmt(targetVol)}</span>
+            <span class="slide-kpi-sub">Target for ${workingDays} days</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">🏆 Actual Output</span>
+            <span class="slide-kpi-value text-green">${fmt(actualVol)}</span>
+            <span class="slide-kpi-sub">Completed during period</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">📊 Rolling Target</span>
+            <span class="slide-kpi-value text-purple">${fmt(c.target_till_date)}</span>
+            <span class="slide-kpi-sub">Target till date (Excel)</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">⚖️ Balance Target</span>
+            <span class="slide-kpi-value" style="color:${balance === 0 ? 'var(--accent-green)' : 'var(--accent-amber)'}">
+              ${balance === 0 ? '✓ Met' : fmt(balance)}
+            </span>
+            <span class="slide-kpi-sub">Remaining target volume</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">⚙️ Required Rate</span>
+            <span class="slide-kpi-value text-amber">${fmt(calculatedReqRate)}/day</span>
+            <span class="slide-kpi-sub">${lackingRate > 0 ? `Planned + lacking rate (+${fmt(lackingRate)}/d)` : 'Planned rate (no lacking nos)'}</span>
+          </div>
+        </div>`;
+        
+      document.getElementById('active-slide-content').innerHTML = slideContent;
+      
+      // Draw circular dial gauge
+      setTimeout(() => renderSlideGauge('slide-group-gauge', eff), 50);
+    }
+
+    function renderSlideGauge(canvasId, ftaPct) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      const r = 58;
+      
+      // Track
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+      ctx.strokeStyle = currentTheme === 'light' ? 'rgba(79,142,247,0.12)' : 'rgba(99,130,255,0.10)';
+      ctx.lineWidth = 10;
+      ctx.stroke();
+
+      // Fill (capped at 100% visually for full circle)
+      const fillPct = Math.min(ftaPct, 100);
+      const color = ftaPct >= 100 ? '#10b981' : ftaPct >= 90 ? '#f59e0b' : '#ef4444';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + (fillPct / 100) * 2 * Math.PI);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    function nextSlide() {
+      if (slideshowGroups.length === 0) return;
+      currentSlideGroupIndex = (currentSlideGroupIndex + 1) % slideshowGroups.length;
+      renderActiveSlide();
+    }
+    
+    function prevSlide() {
+      if (slideshowGroups.length === 0) return;
+      currentSlideGroupIndex = (currentSlideGroupIndex - 1 + slideshowGroups.length) % slideshowGroups.length;
+      renderActiveSlide();
+    }
+    
+    function jumpToSlide(idx) {
+      currentSlideGroupIndex = idx;
+      renderActiveSlide();
+    }
+    
+    function toggleAutoplay() {
+      const btn = document.getElementById('autoplay-btn');
+      const status = document.getElementById('autoplay-status');
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+        autoplayInterval = null;
+        btn.textContent = '▶ Auto-Play';
+        status.textContent = 'Paused';
+      } else {
+        autoplayInterval = setInterval(nextSlide, 3500); // 3.5 seconds
+        btn.textContent = '⏸ Pause';
+        status.textContent = 'Running';
+      }
     }
 
     /* ══════════════════════════════════════════════════
        RENDER: Flow Chart
-       Uses CAPACITY SHEET data: Target Till Date (In) vs Actuals (Out)
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderFlowChart(flow, groupwise, detail) {
-      const isSpecificDate = dateMode === 'specific';
+      const isSpecificDate = selectedPeriodType === 'date';
       const flowTitle = isSpecificDate ? 'Production In vs Production Out (Daily)' : 'Production In vs Production Out';
       const flowSubtitle = isSpecificDate 
         ? 'Daily target (In) vs daily actual completed output (Out) — by group' 
@@ -1885,15 +3035,30 @@
       const tillData = groupwise.till_date;
       const actualData = groupwise.actuals;
 
+      // Sort groups by till_date target descending for easier comparison
+      const mapped = groups.map((g, i) => ({
+        group: g,
+        till_date: tillData[i] || 0,
+        actual: actualData[i] || 0
+      }));
+      mapped.sort((a, b) => {
+        if (b.till_date !== a.till_date) return b.till_date - a.till_date;
+        return b.actual - a.actual;
+      });
+
+      const sortedGroups = mapped.map(x => x.group);
+      const sortedTillData = mapped.map(x => x.till_date);
+      const sortedActualData = mapped.map(x => x.actual);
+
       if (charts.flow) charts.flow.destroy();
       charts.flow = new Chart(document.getElementById('flow-chart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: groups,
+          labels: sortedGroups,
           datasets: [
             {
               label: 'Production In (Target Till Date)',
-              data: tillData,
+              data: sortedTillData,
               backgroundColor: 'rgba(79,142,247,0.55)',
               borderColor: 'var(--accent-blue)',
               borderWidth: 1.5,
@@ -1901,7 +3066,7 @@
             },
             {
               label: 'Production Out (Actual)',
-              data: actualData,
+              data: sortedActualData,
               backgroundColor: 'rgba(16,185,129,0.55)',
               borderColor: 'var(--accent-green)',
               borderWidth: 1.5,
@@ -1909,15 +3074,15 @@
             }
           ]
         },
-        options: chartOptions({ yLabel: 'Units' })
+        options: chartOptions({ yLabel: 'Nos' })
       });
     }
 
     /* ══════════════════════════════════════════════════
        RENDER: Groupwise Performance
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderGroupwiseChart(groupwise) {
-      const isSpecificDate = dateMode === 'specific';
+      const isSpecificDate = selectedPeriodType === 'date';
       const gwTitle = isSpecificDate ? 'Daily Target vs Actual Production by Group' : 'Target vs Actual Production by Group';
       const gwSubtitle = isSpecificDate 
         ? 'Daily target vs actual output — order-level data from Output sheet' 
@@ -1951,26 +3116,52 @@
                   <div class="legend-dot" style="background:var(--accent-green)"></div>Actual Output
                 </div>
                 <div class="legend-item">
-                  <div class="legend-dot" style="background:var(--accent-amber)"></div>Target Till Date
+                  <div class="legend-dot" style="background:var(--accent-amber)"></div>Balance
                 </div>`;
             }
           }
         }
       }
 
+      // Sort groups by target volume descending for easier comparison of similar volume groups
+      const mapped = groupwise.groups.map((g, i) => {
+        const targetVal = groupwise.targets[i] || 0;
+        const actualVal = groupwise.actuals[i] || 0;
+        const tillDateVal = groupwise.till_date[i] || 0;
+        const balanceVal = Math.max(0, targetVal - actualVal);
+        return {
+          group: g,
+          target: targetVal,
+          actual: actualVal,
+          till_date: tillDateVal,
+          balance: balanceVal
+        };
+      });
+
+      mapped.sort((a, b) => {
+        if (b.target !== a.target) return b.target - a.target;
+        return b.actual - a.actual;
+      });
+
+      const sortedGroups = mapped.map(x => x.group);
+      const sortedTargets = mapped.map(x => x.target);
+      const sortedActuals = mapped.map(x => x.actual);
+      const sortedTillDate = mapped.map(x => x.till_date);
+      const sortedBalance = mapped.map(x => x.balance);
+
       if (charts.groupwise) charts.groupwise.destroy();
       
       const datasets = isSpecificDate ? [
         {
           label: 'Daily Target',
-          data: groupwise.targets,
+          data: sortedTargets,
           backgroundColor: 'rgba(79,142,247,0.45)',
           borderColor: 'var(--accent-blue)',
           borderWidth: 1.5, borderRadius: 4
         },
         {
           label: 'Daily Actual',
-          data: groupwise.actuals,
+          data: sortedActuals,
           backgroundColor: 'rgba(16,185,129,0.55)',
           borderColor: 'var(--accent-green)',
           borderWidth: 1.5, borderRadius: 4
@@ -1978,21 +3169,21 @@
       ] : [
         {
           label: 'Monthly Target',
-          data: groupwise.targets,
+          data: sortedTargets,
           backgroundColor: 'rgba(79,142,247,0.45)',
           borderColor: 'var(--accent-blue)',
           borderWidth: 1.5, borderRadius: 4
         },
         {
           label: 'Actual Output',
-          data: groupwise.actuals,
+          data: sortedActuals,
           backgroundColor: 'rgba(16,185,129,0.55)',
           borderColor: 'var(--accent-green)',
           borderWidth: 1.5, borderRadius: 4
         },
         {
-          label: 'Target Till Date',
-          data: groupwise.till_date,
+          label: 'Balance',
+          data: sortedBalance,
           backgroundColor: 'rgba(245,158,11,0.45)',
           borderColor: 'var(--accent-amber)',
           borderWidth: 1.5, borderRadius: 4
@@ -2002,21 +3193,21 @@
       charts.groupwise = new Chart(document.getElementById('groupwise-chart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: groupwise.groups,
+          labels: sortedGroups,
           datasets: datasets
         },
-        options: chartOptions({ yLabel: 'Units' })
+        options: chartOptions({ yLabel: 'Nos' })
       });
     }
 
     /* ══════════════════════════════════════════════════
        RENDER: Quality KPIs
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderQualityKPIs(overall) {
       const fta = overall.fta_pct || 0;
       const el = document.getElementById('fta-overall');
-      el.textContent = fta.toFixed(1) + '%';
-      el.style.color = fta >= 97 ? 'var(--accent-green)' : fta >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+      el.textContent = (fta * (fta <= 1 ? 100 : 1)).toFixed(1) + '%';
+      el.style.color = fta >= (fta <= 1 ? 0.97 : 97) ? 'var(--accent-green)' : fta >= (fta <= 1 ? 0.90 : 90) ? 'var(--accent-amber)' : 'var(--accent-red)';
       document.getElementById('q-total-acc').textContent = fmt(overall.total_acc || 0);
       document.getElementById('q-total-rej').textContent = fmt(overall.total_rej || 0);
       document.getElementById('q-total-rework').textContent = fmt(overall.total_rework || 0);
@@ -2027,14 +3218,16 @@
 
     /* ══════════════════════════════════════════════════
        RENDER: FTA Gauge Arc
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderFTAGauge(ftaPct) {
       const canvas = document.getElementById('fta-gauge');
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const cx = canvas.width / 2, cy = canvas.height * 0.85;
       const r = 65;
-      const start = Math.PI, fill = start + (ftaPct / 100) * Math.PI;
+      
+      const pct = ftaPct <= 1 ? ftaPct * 100 : ftaPct;
+      const start = Math.PI, fill = start + (pct / 100) * Math.PI;
 
       // Track
       ctx.beginPath();
@@ -2043,10 +3236,10 @@
       ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.stroke();
 
       // Fill
-      const color = ftaPct >= 97 ? '#10b981' : ftaPct >= 90 ? '#f59e0b' : '#ef4444';
+      const color = pct >= 97 ? '#10b981' : pct >= 90 ? '#f59e0b' : '#ef4444';
       const grad = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
       grad.addColorStop(0, color);
-      grad.addColorStop(1, ftaPct >= 97 ? '#22d3ee' : color);
+      grad.addColorStop(1, pct >= 97 ? '#22d3ee' : color);
       ctx.beginPath();
       ctx.arc(cx, cy, r, start, fill);
       ctx.strokeStyle = grad; ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.stroke();
@@ -2061,10 +3254,12 @@
 
     /* ══════════════════════════════════════════════════
        RENDER: FTA Group Chart
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderFTAGroupChart(groupwise) {
-      const bgColors = groupwise.fta_pct.map(v => v >= 97 ? 'rgba(16,185,129,0.65)' : v >= 90 ? 'rgba(245,158,11,0.65)' : 'rgba(239,68,68,0.65)');
-      const brdColors = groupwise.fta_pct.map(v => v >= 97 ? '#10b981' : v >= 90 ? '#f59e0b' : '#ef4444');
+      const normFta = groupwise.fta_pct.map(v => v <= 1 ? v * 100 : v);
+      
+      const bgColors = normFta.map(v => v >= 97 ? 'rgba(16,185,129,0.65)' : v >= 90 ? 'rgba(245,158,11,0.65)' : 'rgba(239,68,68,0.65)');
+      const brdColors = normFta.map(v => v >= 97 ? '#10b981' : v >= 90 ? '#f59e0b' : '#ef4444');
       if (charts.ftaGroup) charts.ftaGroup.destroy();
 
       const options = chartOptions({ yLabel: 'FTA %', yMin: 75, yMax: 100 });
@@ -2078,14 +3273,14 @@
           weight: 'bold',
           size: 10
         },
-        formatter: (v) => v.toFixed(1) + '%'
+        formatter: (v) => (v <= 1 ? v * 100 : v).toFixed(1) + '%'
       };
 
       charts.ftaGroup = new Chart(document.getElementById('fta-group-chart').getContext('2d'), {
         type: 'bar',
         data: {
           labels: groupwise.groups,
-          datasets: [{ label: 'FTA %', data: groupwise.fta_pct, backgroundColor: bgColors, borderColor: brdColors, borderWidth: 1.5, borderRadius: 5 }]
+          datasets: [{ label: 'FTA %', data: normFta, backgroundColor: bgColors, borderColor: brdColors, borderWidth: 1.5, borderRadius: 5 }]
         },
         options: options
       });
@@ -2093,7 +3288,7 @@
 
     /* ══════════════════════════════════════════════════
        RENDER: Rejection Chart
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderRejectionChart(groupwise) {
       if (charts.rejection) charts.rejection.destroy();
       const maxV = Math.max(...groupwise.rejection, 1);
@@ -2107,13 +3302,13 @@
             borderColor: '#ef4444', borderWidth: 1.5, borderRadius: 5
           }]
         },
-        options: chartOptions({ yLabel: 'Units' })
+        options: chartOptions({ yLabel: 'Nos' })
       });
     }
 
     /* ══════════════════════════════════════════════════
        RENDER: Rework Chart
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderReworkChart(groupwise) {
       if (charts.rework) charts.rework.destroy();
       const maxV = Math.max(...groupwise.rework, 1);
@@ -2127,13 +3322,219 @@
             borderColor: '#f59e0b', borderWidth: 1.5, borderRadius: 5
           }]
         },
-        options: chartOptions({ yLabel: 'Units' })
+        options: chartOptions({ yLabel: 'Nos' })
       });
     }
 
     /* ══════════════════════════════════════════════════
+       RENDER: FTA Detail (LE/HE FTA + Stripping + Defects)
+     ══════════════════════════════════════════════════ */
+    function renderFTADetail(dFta) {
+      if (!dFta) return;
+
+      // ── Stripping KPI ──
+      const strip = dFta.stripping || {};
+      const stripPct = strip.stripping_pct || 0;
+      const stripEl = document.getElementById('q-strip-pct');
+      if (stripEl) {
+        stripEl.textContent = stripPct.toFixed(2) + '%';
+        stripEl.style.color = stripPct <= 1 ? 'var(--accent-green)' : stripPct <= 3 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const nosEl = document.getElementById('q-strip-nos');
+        if (nosEl) nosEl.textContent = `${fmt(strip.total_stripping||0)} stripped / ${fmt(strip.total_output||0)} output`;
+      }
+
+      // -- LE/HE FTA KPIs --
+      const monthly = dFta.monthly || [];
+      let leTotalLots = 0, leAccLots = 0, leRejLots = 0;
+      let heLotTotal = 0, heAccTotal = 0, heRejTotal = 0;
+      monthly.forEach(m => {
+        leTotalLots += m.le_lots || 0;
+        leAccLots   += m.le_acc_lots || 0;
+        leRejLots   += m.le_rej_lots || 0;
+        heLotTotal  += m.he_lot || 0;
+        heAccTotal  += m.he_acc || 0;
+        heRejTotal  += m.he_rej || 0;
+      });
+      // LE: lot-based FTA
+      const leFtaFinal = leTotalLots > 0 ? (leAccLots / leTotalLots * 100) : 0;
+      // HE: unit-based FTA
+      const heFtaFinal = heLotTotal > 0 ? (heAccTotal / heLotTotal * 100) : 0;
+
+      const leEl = document.getElementById('q-le-fta');
+      if (leEl) {
+        leEl.textContent = leFtaFinal.toFixed(2) + '%';
+        leEl.style.color = leFtaFinal >= 70 ? 'var(--accent-green)' : leFtaFinal >= 50 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const nosEl = document.getElementById('q-le-nos');
+        if (nosEl) nosEl.textContent = `${fmt(leAccLots)} acc / ${fmt(leTotalLots)} lots`;
+      }
+      const heEl = document.getElementById('q-he-fta');
+      if (heEl) {
+        heEl.textContent = heFtaFinal.toFixed(2) + '%';
+        heEl.style.color = heFtaFinal >= 95 ? 'var(--accent-green)' : heFtaFinal >= 85 ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const nosEl = document.getElementById('q-he-nos');
+        if (nosEl) nosEl.textContent = `${fmt(heLotTotal)} lots | ${fmt(heRejTotal)} rej`;
+      }
+
+      // ── LE/HE Monthly Trend Chart ──
+      if (monthly.length > 0) {
+        const labels = monthly.map(m => {
+          const [y, mo] = m.month.split('-');
+          return new Date(y, mo - 1).toLocaleString('default', { month: 'short', year: '2-digit' });
+        });
+        const leData = monthly.map(m => m.le_fta || 0);
+        const heData = monthly.map(m => m.he_fta || 0);
+
+        if (charts.leHeFta) charts.leHeFta.destroy();
+        charts.leHeFta = new Chart(document.getElementById('le-he-fta-chart').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              { label: 'LE FTA %', data: leData, borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.1)',
+                tension: 0.4, fill: true, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2 },
+              { label: 'HE FTA %', data: heData, borderColor: '#14b8a6', backgroundColor: 'rgba(20,184,166,0.1)',
+                tension: 0.4, fill: true, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2 }
+            ]
+          },
+          options: chartOptions({ yLabel: 'FTA %', yMin: 0, yMax: 105 })
+        });
+
+        // ── Stripping Monthly Chart ──
+        const stripMonthly = strip.monthly || [];
+        const sLabels = stripMonthly.map(m => {
+          const [y, mo] = m.month.split('-');
+          return new Date(y, mo - 1).toLocaleString('default', { month: 'short', year: '2-digit' });
+        });
+        const sPctData = stripMonthly.map(m => m.stripping_pct || 0);
+        if (charts.strippingMonthly) charts.strippingMonthly.destroy();
+        charts.strippingMonthly = new Chart(document.getElementById('stripping-monthly-chart').getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: sLabels,
+            datasets: [{
+              label: 'Stripping %', data: sPctData,
+              backgroundColor: sPctData.map(v => v <= 1 ? 'rgba(16,185,129,0.6)' : v <= 3 ? 'rgba(245,158,11,0.6)' : 'rgba(168,85,247,0.6)'),
+              borderColor: sPctData.map(v => v <= 1 ? '#10b981' : v <= 3 ? '#f59e0b' : '#a855f7'),
+              borderWidth: 1.5, borderRadius: 5
+            }]
+          },
+          options: (() => {
+            const o = chartOptions({ yLabel: 'Strip %' });
+            o.plugins.datalabels = {
+              display: true,
+              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              anchor: 'end', align: 'top', offset: -2,
+              font: { weight: 'bold', size: 10 },
+              formatter: v => v.toFixed(2) + '%'
+            };
+            return o;
+          })()
+        });
+      }
+
+      // ── LE Defect Chart ──
+      const leDef = dFta.le_defects || [];
+      if (leDef.length > 0) {
+        const leDefLabels = leDef.map(d => d[0]);
+        const leDefData   = leDef.map(d => d[1]);
+        const maxLe = Math.max(...leDefData, 1);
+        if (charts.leDefect) charts.leDefect.destroy();
+        charts.leDefect = new Chart(document.getElementById('le-defect-chart').getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: leDefLabels,
+            datasets: [{
+              label: 'Count', data: leDefData,
+              backgroundColor: leDefData.map(v => `rgba(34,211,238,${0.3 + 0.7 * v / maxLe})`),
+              borderColor: '#22d3ee', borderWidth: 1.5, borderRadius: 4
+            }]
+          },
+          options: (() => {
+            const o = chartOptions({ yLabel: 'Count', xRotate: true });
+            o.indexAxis = 'y';
+            o.plugins.datalabels = {
+              display: true,
+              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              anchor: 'end', align: 'right',
+              font: { weight: 'bold', size: 10 },
+              formatter: v => fmt(v)
+            };
+            return o;
+          })()
+        });
+      }
+
+      // ── HE Defect Chart ──
+      const heDef = dFta.he_defects || [];
+      if (heDef.length > 0) {
+        const heDefLabels = heDef.map(d => d[0]);
+        const heDefData   = heDef.map(d => d[1]);
+        const maxHe = Math.max(...heDefData, 1);
+        if (charts.heDefect) charts.heDefect.destroy();
+        charts.heDefect = new Chart(document.getElementById('he-defect-chart').getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: heDefLabels,
+            datasets: [{
+              label: 'Count', data: heDefData,
+              backgroundColor: heDefData.map(v => `rgba(20,184,166,${0.3 + 0.7 * v / maxHe})`),
+              borderColor: '#14b8a6', borderWidth: 1.5, borderRadius: 4
+            }]
+          },
+          options: (() => {
+            const o = chartOptions({ yLabel: 'Count', xRotate: true });
+            o.indexAxis = 'y';
+            o.plugins.datalabels = {
+              display: true,
+              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              anchor: 'end', align: 'right',
+              font: { weight: 'bold', size: 10 },
+              formatter: v => fmt(v)
+            };
+            return o;
+          })()
+        });
+      }
+
+      // -- MOM Group FTA Table --
+      const momMonthly = dFta.mom_monthly || {};
+      const momTbody = document.getElementById('mom-fta-table-body');
+      if (momTbody) {
+        const allMonthKeys = Object.keys(momMonthly).sort();
+        if (allMonthKeys.length === 0) {
+          momTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">No MOM data available</td></tr>';
+        } else {
+          // Show latest month or all months
+          let rows = [];
+          allMonthKeys.forEach(mo => {
+            const groups = momMonthly[mo] || [];
+            groups.forEach(g => {
+              if (g.group && g.group.toLowerCase() !== 'total') rows.push({mo, ...g});
+            });
+          });
+          if (rows.length === 0) {
+            momTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No group data</td></tr>';
+          } else {
+            momTbody.innerHTML = rows.map(r => {
+              const fta = r.fta || 0;
+              const col = fta >= 97 ? 'var(--accent-green)' : fta >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
+              return `<tr>
+                <td><strong>${r.group}</strong></td>
+                <td style="font-family:'JetBrains Mono',mono">${fmt(r.output)}</td>
+                <td style="color:var(--accent-amber);font-family:'JetBrains Mono',mono">${fmt(r.shop_rej)}</td>
+                <td style="color:var(--accent-red);font-family:'JetBrains Mono',mono">${fmt(r.iqf_rej)}</td>
+                <td style="font-family:'JetBrains Mono',mono">${fmt(r.cum_rej)}</td>
+                <td style="font-weight:700;color:${col}">${fta.toFixed(2)}%</td>
+              </tr>`;
+            }).join('');
+          }
+        }
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
        RENDER: Quality Table
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     function renderQualityTable(groupwise) {
       const tbody = document.getElementById('quality-table-body');
       if (!groupwise.groups || !groupwise.groups.length) {
@@ -2141,7 +3542,8 @@
         return;
       }
       tbody.innerHTML = groupwise.groups.map((g, i) => {
-        const fta = groupwise.fta_pct[i] || 0;
+        let fta = groupwise.fta_pct[i] || 0;
+        fta = fta <= 1 ? fta * 100 : fta;
         const rej = groupwise.rejection[i] || 0;
         const rew = groupwise.rework[i] || 0;
         const acc = groupwise.acceptance[i] || 0;
@@ -2160,15 +3562,18 @@
 
     /* ══════════════════════════════════════════════════
        INIT
-    ══════════════════════════════════════════════════ */
+     ══════════════════════════════════════════════════ */
     async function init() {
       Chart.register(ChartDataLabels);
-      document.getElementById('month-picker').classList.add('active');
       await loadMeta();
       await applyFilters();
       document.getElementById('loading-overlay').classList.add('hidden');
+      
       // Auto-refresh every 60s
-      setInterval(async () => { await fetch(`${API}/refresh`).catch(() => { }); await applyFilters(); }, 60000);
+      setInterval(async () => { 
+        await fetch(`${API}/refresh`).catch(() => { }); 
+        await applyFilters(); 
+      }, 60000);
     }
 
     init();
