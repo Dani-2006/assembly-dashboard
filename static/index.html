@@ -1296,27 +1296,48 @@
       flex: 1;
       min-height: 280px;
       display: flex;
-      align-items: center;
-      gap: 32px;
+      flex-direction: column;
+      gap: 20px;
       padding: 12px 16px;
       animation: fadeIn 0.4s ease;
     }
 
-    /* Split layout inside slide */
-    .slide-left {
-      width: 220px;
+    .slide-top-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .slide-bottom-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .slide-bottom-left {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      flex-shrink: 0;
+      transition: all 0.2s;
     }
 
-    .slide-right {
-      flex: 1;
+    .slide-bottom-left:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99, 130, 255, 0.3);
+    }
+
+    .slide-bottom-right {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
 
@@ -1425,8 +1446,17 @@
         flex-direction: column;
         gap: 20px;
       }
-      .slide-left {
-        width: 100%;
+      .slide-top-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .slide-bottom-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .slide-bottom-right {
+        grid-template-columns: 1fr;
+        gap: 12px;
       }
     }
 
@@ -1637,6 +1667,26 @@
       grid-template-columns: 220px 1fr;
       gap: 20px;
       flex-shrink: 0;
+    }
+    .pres-group-hero-top {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .pres-group-hero-bottom {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+      flex: 1;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .pres-kpi-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-content: stretch;
     }
     .pres-group-gauge-card {
       background: var(--bg-card);
@@ -2509,8 +2559,8 @@
             align: 'top',
             offset: -2,
             font: {
-              weight: '700',
-              size: 9,
+              weight: '800',
+              size: 11,
               family: 'Inter, sans-serif'
             },
             formatter: (v) => {
@@ -2961,7 +3011,7 @@
                 const d = ctx.dataset.data;
                 return i > 0 && d[i] > d[i-1] ? '#fb7185' : '#34d399';
               },
-              font: { size: 10, weight: '700', family: "'JetBrains Mono', mono" },
+              font: { size: 11, weight: '800', family: "'JetBrains Mono', mono" },
               formatter: v => v ? v.toLocaleString() : ''
             }
           }
@@ -3256,12 +3306,20 @@
       const c = slideshowGroups[currentSlideGroupIndex];
       const workingDays = parseFloat(document.getElementById('working-days-input').value) || 1.0;
       
-      const capPerDay = c.capacity * 1000;
-      const ratePerDay = c.rate_per_day * 1000;
+      const shopCapacityDaily = (c.capacity || 0) * 1000;
+      const modifiedCapacityDaily = shopCapacityDaily * 0.9;
+      
+      const ratePerDay = (c.rate_per_day || 0) * 1000;
       const targetVol = ratePerDay * workingDays;
-      const actualVol = c.actuals_qty;
+      const actualVol = c.actuals_qty || 0;
       const eff = targetVol > 0 ? (actualVol / targetVol) * 100 : 0.0;
       const balance = Math.max(0, targetVol - actualVol);
+
+      const monthLoading = c.target_month || 0;
+      const monthCapacityShop = shopCapacityDaily * workingDays;
+      const monthCapacityModified = modifiedCapacityDaily * workingDays;
+      const monthLoadingPctShop = monthCapacityShop > 0 ? (monthLoading / monthCapacityShop) * 100 : 0.0;
+      const monthLoadingPctModified = monthCapacityModified > 0 ? (monthLoading / monthCapacityModified) * 100 : 0.0;
 
       // Dynamically calculate remaining working days in the month and new required rate
       const weeks = (metaData && metaData.month_weeks && metaData.month_weeks[selectedMonth]) || [];
@@ -3273,49 +3331,82 @@
       const effCol = eff >= 100 ? 'var(--accent-green)' : eff >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)';
       
       const slideContent = `
-        <div class="slide-left">
-          <div style="font-size: 28px; font-weight: 800; color: var(--accent-blue);">${c.group}</div>
-          <div class="slide-gauge-wrap">
-            <canvas id="slide-group-gauge" width="160" height="160"></canvas>
-            <div class="slide-gauge-pct">
-              <span class="slide-gauge-num" style="color:${effCol}">${eff.toFixed(1)}%</span>
-              <span class="slide-gauge-label">Efficiency</span>
+        <div class="slide-top-row">
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">🏭 Shop Capacity (Daily)</span>
+            <span class="slide-kpi-value text-blue">${fmt(shopCapacityDaily)}/day</span>
+            <span class="slide-kpi-sub">Max daily physical limit</span>
+          </div>
+          <div class="slide-kpi-card">
+            <span class="slide-kpi-label">🤝 Modified Capacity (90%)</span>
+            <span class="slide-kpi-value text-cyan">${fmt(modifiedCapacityDaily)}/day (90%)</span>
+            <span class="slide-kpi-sub">90% of daily physical limit</span>
+          </div>
+          <div class="slide-kpi-card" style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+              <span class="slide-kpi-label" style="margin-bottom: 0;">📅 Monthly Loading Analysis</span>
+              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;">
+                Cap: ${fmt(monthCapacityShop)} (Shop) | ${fmt(monthCapacityModified)} (Mod)
+              </span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 2px;">
+              <div>
+                <span class="slide-kpi-label" style="font-size: 9px; color: var(--text-muted); display: block; margin-bottom: 2px; text-transform: uppercase;">w.r.t Shop Capacity</span>
+                <span class="slide-kpi-value text-purple" style="font-size: 18px; line-height: 1.1;">${monthLoadingPctShop.toFixed(1)}%</span>
+                <div style="font-size: 9px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 2px; line-height: 1.2;">
+                  Calc: ${fmt(monthLoading)} / (${fmt(shopCapacityDaily)} × ${workingDays})
+                </div>
+              </div>
+              <div>
+                <span class="slide-kpi-label" style="font-size: 9px; color: var(--text-muted); display: block; margin-bottom: 2px; text-transform: uppercase;">w.r.t Modified Cap</span>
+                <span class="slide-kpi-value text-amber" style="font-size: 18px; line-height: 1.1;">${monthLoadingPctModified.toFixed(1)}%</span>
+                <div style="font-size: 9px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 2px; line-height: 1.2;">
+                  Calc: ${fmt(monthLoading)} / (${fmt(modifiedCapacityDaily)} × ${workingDays})
+                </div>
+              </div>
             </div>
           </div>
-          <div style="font-size: 12px; font-weight: 600; color:${effCol}">${eff >= 100 ? '✓ Target Met' : eff >= 90 ? '≈ On Target' : '⚠ Below Target'}</div>
         </div>
-        <div class="slide-right">
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">🏭 Daily Capacity</span>
-            <span class="slide-kpi-value text-blue">${fmt(capPerDay)}/day</span>
-            <span class="slide-kpi-sub">Max physical capacity limit</span>
+        <div class="slide-bottom-row">
+          <div class="slide-bottom-left">
+            <div style="font-size: 28px; font-weight: 800; color: var(--accent-blue);">${c.group}</div>
+            <div class="slide-gauge-wrap">
+              <canvas id="slide-group-gauge" width="160" height="160"></canvas>
+              <div class="slide-gauge-pct">
+                <span class="slide-gauge-num" style="color:${effCol}">${eff.toFixed(1)}%</span>
+                <span class="slide-gauge-label">Efficiency</span>
+              </div>
+            </div>
+            <div style="font-size: 12px; font-weight: 600; color:${effCol}">${eff >= 100 ? '✓ Target Met' : eff >= 90 ? '≈ On Target' : '⚠ Below Target'}</div>
           </div>
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">🎯 Target Volume</span>
-            <span class="slide-kpi-value text-cyan">${fmt(targetVol)}</span>
-            <span class="slide-kpi-sub">Target for ${workingDays} days</span>
-          </div>
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">🏆 Actual Output</span>
-            <span class="slide-kpi-value text-green">${fmt(actualVol)}</span>
-            <span class="slide-kpi-sub">Completed during period</span>
-          </div>
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">📊 Rolling Target</span>
-            <span class="slide-kpi-value text-purple">${fmt(c.target_till_date)}</span>
-            <span class="slide-kpi-sub">Target till date (Excel)</span>
-          </div>
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">⚖️ Balance Target</span>
-            <span class="slide-kpi-value" style="color:${balance === 0 ? 'var(--accent-green)' : 'var(--accent-amber)'}">
-              ${balance === 0 ? '✓ Met' : fmt(balance)}
-            </span>
-            <span class="slide-kpi-sub">Remaining target volume</span>
-          </div>
-          <div class="slide-kpi-card">
-            <span class="slide-kpi-label">⚙️ Required Rate</span>
-            <span class="slide-kpi-value text-amber">${fmt(calculatedReqRate)}/day</span>
-            <span class="slide-kpi-sub">${lackingRate > 0 ? `Planned + lacking rate (+${fmt(lackingRate)}/d)` : 'Planned rate (no lacking nos)'}</span>
+          <div class="slide-bottom-right">
+            <div class="slide-kpi-card">
+              <span class="slide-kpi-label">🎯 Target Volume</span>
+              <span class="slide-kpi-value text-cyan">${fmt(targetVol)}</span>
+              <span class="slide-kpi-sub">Target for ${workingDays} days</span>
+            </div>
+            <div class="slide-kpi-card">
+              <span class="slide-kpi-label">🏆 Actual Output</span>
+              <span class="slide-kpi-value text-green">${fmt(actualVol)}</span>
+              <span class="slide-kpi-sub">Completed during period</span>
+            </div>
+            <div class="slide-kpi-card">
+              <span class="slide-kpi-label">📊 Rolling Target</span>
+              <span class="slide-kpi-value text-purple">${fmt(c.target_till_date)}</span>
+              <span class="slide-kpi-sub">Target till date (Excel)</span>
+            </div>
+            <div class="slide-kpi-card">
+              <span class="slide-kpi-label">⚖️ Balance Target</span>
+              <span class="slide-kpi-value" style="color:${balance === 0 ? 'var(--accent-green)' : 'var(--accent-amber)'}">
+                ${balance === 0 ? '✓ Met' : fmt(balance)}
+              </span>
+              <span class="slide-kpi-sub">Remaining target volume</span>
+            </div>
+            <div class="slide-kpi-card" style="grid-column: span 2;">
+              <span class="slide-kpi-label">⚙️ Required Rate</span>
+              <span class="slide-kpi-value text-amber">${fmt(calculatedReqRate)}/day</span>
+              <span class="slide-kpi-sub">${lackingRate > 0 ? `Planned + lacking rate (+${fmt(lackingRate)}/d)` : 'Planned rate (no lacking nos)'}</span>
+            </div>
           </div>
         </div>`;
         
@@ -3664,13 +3755,13 @@
       const options = chartOptions({ yLabel: 'FTA %', yMin: 75, yMax: 100 });
       options.plugins.datalabels = {
         display: true,
-        color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+        color: currentTheme === 'light' ? '#000000' : '#ffffff',
         anchor: 'end',
         align: 'top',
         offset: -2,
         font: {
-          weight: 'bold',
-          size: 10
+          weight: '800',
+          size: 11
         },
         formatter: (v) => (v <= 1 ? v * 100 : v).toFixed(1) + '%'
       };
@@ -3821,9 +3912,9 @@
             const o = chartOptions({ yLabel: 'Strip %' });
             o.plugins.datalabels = {
               display: true,
-              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              color: currentTheme === 'light' ? '#000000' : '#ffffff',
               anchor: 'end', align: 'top', offset: -2,
-              font: { weight: 'bold', size: 10 },
+              font: { weight: '800', size: 11 },
               formatter: v => v.toFixed(2) + '%'
             };
             return o;
@@ -3853,9 +3944,9 @@
             o.indexAxis = 'y';
             o.plugins.datalabels = {
               display: true,
-              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              color: currentTheme === 'light' ? '#000000' : '#ffffff',
               anchor: 'end', align: 'right',
-              font: { weight: 'bold', size: 10 },
+              font: { weight: '800', size: 11 },
               formatter: v => fmt(v)
             };
             return o;
@@ -3885,9 +3976,9 @@
             o.indexAxis = 'y';
             o.plugins.datalabels = {
               display: true,
-              color: currentTheme === 'light' ? '#0f172a' : '#f0f4ff',
+              color: currentTheme === 'light' ? '#000000' : '#ffffff',
               anchor: 'end', align: 'right',
-              font: { weight: 'bold', size: 10 },
+              font: { weight: '800', size: 11 },
               formatter: v => fmt(v)
             };
             return o;
@@ -4161,40 +4252,124 @@
          SECTION 1 — OVERALL PRODUCTION
       ================================================================ */
 
-      // Slide 1a: Overall Capacity KPIs
+      // Slide 1a: Overall Capacity & Loading KPIs
       if (d.prodFlow && d.prodCapDetail) {
         const detail = d.prodCapDetail;
         const flow = d.prodFlow;
-        const shopAgreed = detail.reduce((a,c) => a + c.rate_per_day, 0) * 1000;
-        const shopCap = detail.reduce((a,c) => a + c.capacity, 0) * 1000;
-        const shopRolling = detail.reduce((a,c) => a + c.target_till_date, 0);
-        const totalTargetRate = shopAgreed;
-        const totalTargetVol = totalTargetRate * workingDays;
+        const shopCap = detail.reduce((a,c) => a + (c.capacity||0), 0) * 1000;
+        const shopAgreed = detail.reduce((a,c) => a + (c.rate_per_day||0), 0) * 1000;
+        const modifiedCap = shopCap * 0.9;
+        const monthCap = shopAgreed; // Month capacity is Agreed Capacity per day
+        const monthLoading = detail.reduce((a,c) => a + (c.target_month||0), 0);
+        
+        const monthLoadingPctShop = shopCap > 0 ? (monthCap / shopCap) * 100 : 0;
+        const monthLoadingPctModified = modifiedCap > 0 ? (monthCap / modifiedCap) * 100 : 0;
+
         const totalActualVol = flow.actuals || 0;
         const totalActualRate = totalActualVol / workingDays;
-        const volEff = totalTargetVol > 0 ? (totalActualVol / totalTargetVol) * 100 : 0;
-        const rateEff = totalTargetRate > 0 ? (totalActualRate / totalTargetRate) * 100 : 0;
-        const [vBadge, vClass] = effBadge(volEff);
-        const [rBadge, rClass] = effBadge(rateEff);
 
+        // Fetch Quality metrics safely
+        const qo = d.qualOverall || {};
+        const fta = (qo.fta_pct||0) <= 1 ? (qo.fta_pct||0)*100 : (qo.fta_pct||0);
+        const totalRej = qo.total_rej || 0;
+        const totalRework = qo.total_rework || 0;
+        const coqValue = totalRej + totalRework;
+
+        // Fetch Stripping & LE/HE KPIs safely
+        const strip = (d.qualFtaDetail && d.qualFtaDetail.stripping) || {};
+        const stripPct = strip.stripping_pct || 0;
+        const monthly = (d.qualFtaDetail && d.qualFtaDetail.monthly) || [];
+        let leTotalLots=0, leAccLots=0, heLotTotal=0, heAccTotal=0, heRejTotal=0;
+        monthly.forEach(m => {
+          leTotalLots += m.le_lots || 0;
+          leAccLots   += m.le_acc_lots || 0;
+          heLotTotal  += m.he_lot || 0;
+          heAccTotal  += m.he_acc || 0;
+          heRejTotal  += m.he_rej || 0;
+        });
+        const leFta = leTotalLots > 0 ? (leAccLots / leTotalLots * 100) : 0;
+        const heFta = heLotTotal > 0 ? (heAccTotal / heLotTotal * 100) : 0;
+
+        // 1. Capacity & Loading Slide (5 boxes)
         presSlides.push({
           sectionLabel: '🏭 Overall Production',
-          slideName: 'Capacity KPIs',
+          slideName: 'Capacity & Loading',
           isGroupSection: false,
           buildFn: () => `
-            <div class="pres-slide-title">Overall Production — <span>Capacity KPIs</span></div>
-            <div class="pres-kpi-grid" style="grid-template-columns:repeat(6,1fr)">
-              ${presKpiCard('var(--accent-blue)','🗓','Target Volume',fmt(totalTargetVol),`For ${workingDays} working days`,'Target Vol','neutral')}
-              ${presKpiCard('var(--accent-cyan)','⚡','Target Rate',fmt(totalTargetRate)+'/day','Planned daily production rate','Target Rate','neutral')}
-              ${presKpiCard('var(--accent-green)','🏭','Actual Volume',fmt(totalActualVol),'Produced this period','Actual Vol','neutral')}
-              ${presKpiCard('var(--accent-teal)','📈','Actual Rate',fmt(totalActualRate)+'/day','Avg per working day','Actual Rate','neutral')}
-              ${presKpiCard('var(--accent-amber)','🏆','Volume Efficiency',volEff.toFixed(1)+'%',`${fmt(totalActualVol)} / ${fmt(totalTargetVol)} nos`,vBadge,vClass)}
-              ${presKpiCard('var(--accent-purple)','📊','Rate Efficiency',rateEff.toFixed(1)+'%','Actual rate vs target rate',rBadge,rClass)}
+            <div class="pres-slide-title">Overall Production — <span>Capacity & Loading</span></div>
+            <div class="pres-kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px;">
+              <div class="pres-kpi-card" style="padding: 24px 28px;">
+                <div class="pres-kpi-accent" style="background: var(--accent-blue);"></div>
+                <div class="pres-kpi-icon" style="top: 18px; right: 20px; font-size: 32px; opacity: 0.9;">🏭</div>
+                <div class="pres-kpi-label" style="font-size: 12px; margin-bottom: 12px;">Shop Capacity Per Day</div>
+                <div class="pres-kpi-value text-blue" style="font-size: 42px; font-weight: 900;">${fmt(shopCap)}/day</div>
+                <div class="pres-kpi-sub" style="font-size: 12px; margin-top: 8px;">Max daily physical limit</div>
+              </div>
+              <div class="pres-kpi-card" style="padding: 24px 28px;">
+                <div class="pres-kpi-accent" style="background: var(--accent-cyan);"></div>
+                <div class="pres-kpi-icon" style="top: 18px; right: 20px; font-size: 32px; opacity: 0.9;">🤝</div>
+                <div class="pres-kpi-label" style="font-size: 12px; margin-bottom: 12px;">Modified Capacity</div>
+                <div class="pres-kpi-value text-cyan" style="font-size: 42px; font-weight: 900;">
+                  ${fmt(modifiedCap)}/day <span style="background: rgba(34,211,238,0.15); color: var(--accent-cyan); padding: 2px 8px; border-radius: 8px; font-size: 18px; font-weight: 800; margin-left: 8px; vertical-align: middle;">90%</span>
+                </div>
+                <div class="pres-kpi-sub" style="font-size: 12px; margin-top: 8px; font-family: 'JetBrains Mono', monospace;">
+                  Calc: ${fmt(shopCap)} × 90%
+                </div>
+              </div>
+              <div class="pres-kpi-card" style="padding: 24px 28px;">
+                <div class="pres-kpi-accent" style="background: var(--accent-teal);"></div>
+                <div class="pres-kpi-icon" style="top: 18px; right: 20px; font-size: 32px; opacity: 0.9;">📅</div>
+                <div class="pres-kpi-label" style="font-size: 12px; margin-bottom: 12px;">Month Capacity</div>
+                <div class="pres-kpi-value text-teal" style="font-size: 42px; font-weight: 900;">${fmt(monthCap)}/day</div>
+                <div class="pres-kpi-sub" style="font-size: 12px; margin-top: 8px;">Daily agreed target rate</div>
+              </div>
             </div>
-            <div class="pres-kpi-grid" style="grid-template-columns:repeat(3,1fr)">
-              ${presKpiCard('var(--accent-blue)','🏭','Shop Capacity',fmt(shopCap),'Max daily physical limit','Capacity','neutral')}
-              ${presKpiCard('var(--accent-cyan)','🤝','Agreed Capacity',fmt(shopAgreed)+'/day','Planned target daily rate','Agreed','neutral')}
-              ${presKpiCard('var(--accent-purple)','🔄','Rolling Target',fmt(shopRolling),'Cumulative target for period','Rolling','neutral')}
+            <div class="pres-kpi-grid" style="grid-template-columns: repeat(2, 1fr); gap: 24px;">
+              <div class="pres-kpi-card" style="padding: 28px 32px;">
+                <div class="pres-kpi-accent" style="background: var(--accent-purple);"></div>
+                <div class="pres-kpi-icon" style="top: 20px; right: 24px; font-size: 36px; opacity: 0.9;">⚖️</div>
+                <div class="pres-kpi-label" style="font-size: 13px; margin-bottom: 14px;">Month Loading % w.r.t. Shop Capacity</div>
+                <div class="pres-kpi-value text-purple" style="font-size: 54px; font-weight: 900; letter-spacing: -0.04em;">
+                  ${monthLoadingPctShop.toFixed(1)}%
+                </div>
+                <div class="pres-kpi-sub" style="font-size: 13px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; line-height: 1.4;">
+                  Calc: ${fmt(monthCap)} (Month Cap) / ${fmt(shopCap)} (Shop Cap) × 100
+                </div>
+              </div>
+              <div class="pres-kpi-card" style="padding: 28px 32px;">
+                <div class="pres-kpi-accent" style="background: var(--accent-amber);"></div>
+                <div class="pres-kpi-icon" style="top: 20px; right: 24px; font-size: 36px; opacity: 0.9;">⚡</div>
+                <div class="pres-kpi-label" style="font-size: 13px; margin-bottom: 14px;">Month Loading % w.r.t. Modified Capacity</div>
+                <div class="pres-kpi-value text-amber" style="font-size: 54px; font-weight: 900; letter-spacing: -0.04em;">
+                  ${monthLoadingPctModified.toFixed(1)}%
+                </div>
+                <div class="pres-kpi-sub" style="font-size: 13px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; line-height: 1.4;">
+                  Calc: ${fmt(monthCap)} (Month Cap) / ${fmt(modifiedCap)} (Modified Cap) × 100
+                </div>
+              </div>
+            </div>`,
+          initChartsFn: null
+        });
+
+        // 2. Operational & Quality KPIs Slide (9 boxes)
+        presSlides.push({
+          sectionLabel: '🏭 Overall Production',
+          slideName: 'Operational & Quality KPIs',
+          isGroupSection: false,
+          buildFn: () => `
+            <div class="pres-slide-title">Overall Production — <span>Operational & Quality KPIs</span></div>
+            <div class="pres-kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 16px; --pres-kpi-padding: 16px 20px; --pres-kpi-value-size: 28px; --pres-kpi-label-size: 11px;">
+              ${presKpiCard('var(--accent-blue)', '🗓', 'Month Volume (Target)', fmt(monthLoading), `Target for period`, 'Target Vol', 'neutral')}
+              ${presKpiCard('var(--accent-cyan)', '⚡', 'Rate Per Day (Target)', fmt(shopAgreed) + '/day', 'Planned target daily rate', 'Target Rate', 'neutral')}
+              ${presKpiCard('var(--accent-purple)', '📦', 'Avg Volume (WIP)', d.invFlow ? fmt(d.invFlow.avg_wip) : '-', 'Average active WIP volume', 'Avg WIP', 'neutral')}
+              
+              ${presKpiCard('var(--accent-teal)', '📈', 'Actual Day Rate', fmt(totalActualRate) + '/day', 'Avg actual daily production', 'Actual Rate', 'neutral')}
+              ${presKpiCard(fta >= 97 ? 'var(--accent-green)' : fta >= 90 ? 'var(--accent-amber)' : 'var(--accent-red)', '📊', 'FTA %', fta.toFixed(1) + '%', 'Overall First Time Acceptance', fta >= 97 ? 'Target Met' : 'Below Target', fta >= 97 ? 'up' : 'down')}
+              ${presKpiCard('var(--accent-purple)', '🔁', 'Stripping Return %', stripPct.toFixed(2) + '%', 'Stripped units / output', 'Stripping %', 'neutral')}
+              
+              ${presKpiCard('var(--accent-red)', '❌', 'COQ Value (Defects)', fmt(coqValue), 'Lot Rejections + HE Reworks', 'COQ Defects', 'down')}
+              ${presKpiCard('var(--accent-cyan)', '🔵', 'Low End FTA %', leFta.toFixed(2) + '%', 'Lot inspection pass rate', 'LE FTA', 'neutral')}
+              ${presKpiCard('var(--accent-teal)', '🟢', 'High End FTA %', heFta.toFixed(2) + '%', '100% inspection pass rate', 'HE FTA', 'neutral')}
             </div>`,
           initChartsFn: null
         });
@@ -4340,7 +4515,15 @@
             const brC = normFta.map(v => v>=97?'#10b981':v>=90?'#f59e0b':'#ef4444');
             if (presCharts.ftaGrp) presCharts.ftaGrp.destroy();
             const opts = presChartOptions({yMin:75,yMax:100});
-            opts.plugins.datalabels = {display:true,color:'#f0f4ff',anchor:'end',align:'top',offset:-2,font:{weight:'bold',size:11},formatter:v=>v.toFixed(1)+'%'};
+            opts.plugins.datalabels = {
+              display: true,
+              color: currentTheme === 'light' ? '#000000' : '#ffffff',
+              anchor: 'end',
+              align: 'top',
+              offset: -2,
+              font: { weight: '800', size: 12, family: 'Inter, sans-serif' },
+              formatter: v => v.toFixed(1) + '%'
+            };
             presCharts.ftaGrp = new Chart(c.getContext('2d'),{
               type:'bar',
               data:{labels:gw.groups, datasets:[{label:'FTA %',data:normFta,backgroundColor:bgC,borderColor:brC,borderWidth:1.5,borderRadius:5}]},
@@ -4439,7 +4622,7 @@
                 {label:'Daily Output',data:tl.output,borderColor:'#10b981',backgroundColor:go,borderWidth:2.5,pointRadius:3,tension:0.35,fill:true},
                 {label:'WIP Balance',data:tl.wip,borderColor:'#f59e0b',backgroundColor:gw2,borderWidth:3,pointRadius:4,pointBackgroundColor:wipData.map((v,i)=>i>0&&v>wipData[i-1]?'#fb7185':'#34d399'),tension:0.35,fill:true,segment:{borderColor:ctx2=>{const i2=ctx2.p0DataIndex;const p=wipData[i2]??0;const n=wipData[i2+1]??0;return n>p?'rgba(251,113,133,0.9)':'rgba(52,211,153,0.9)';}},}
               ]},
-              options:{...presChartOptions(),plugins:{...presChartOptions().plugins,legend:{display:true,position:'top',labels:{color:'#8b9fc4',usePointStyle:true,padding:16,font:{size:12}}},datalabels:{display:ctx3=>ctx3.datasetIndex===2,align:'top',anchor:'end',color:ctx4=>{const i3=ctx4.dataIndex;const da=ctx4.dataset.data;return i3>0&&da[i3]>da[i3-1]?'#fb7185':'#34d399';},font:{size:9,weight:'700'},formatter:v=>v?v.toLocaleString():''}}}
+              options:{...presChartOptions(),plugins:{...presChartOptions().plugins,legend:{display:true,position:'top',labels:{color:'#8b9fc4',usePointStyle:true,padding:16,font:{size:12}}},datalabels:{display:ctx3=>ctx3.datasetIndex===2,align:'top',anchor:'end',color:ctx4=>{const i3=ctx4.dataIndex;const da=ctx4.dataset.data;return i3>0&&da[i3]>da[i3-1]?'#fb7185':'#34d399';},font:{size:12,weight:'800'},formatter:v=>v?v.toLocaleString():''}}}
             });
           }
         });
@@ -4530,27 +4713,65 @@
           const reqRate = ratePerDay + lackingRate;
           const canvasGroupId = `pres-grp-gauge-${gIdx}`;
 
+          const shopCapacityDaily = capPerDay;
+          const modifiedCapacityDaily = shopCapacityDaily * 0.9;
+          const monthLoading = capRow.target_month || 0;
+          const monthCapacityShop = shopCapacityDaily * workingDays;
+          const monthCapacityModified = modifiedCapacityDaily * workingDays;
+          const monthLoadingPctShop = monthCapacityShop > 0 ? (monthLoading / monthCapacityShop) * 100 : 0.0;
+          const monthLoadingPctModified = monthCapacityModified > 0 ? (monthLoading / monthCapacityModified) * 100 : 0.0;
+
           presSlides.push({
             sectionLabel: `Group: <strong style="color:var(--accent-purple);margin-left:6px">${groupName}</strong>`,
             slideName: `${groupName} — Production`,
             isGroupSection: true,
             buildFn: () => `
               <div class="pres-slide-title">Group <span>${groupName}</span> — Production Performance</div>
-              <div class="pres-group-hero" style="grid-template-columns: 240px 1fr; gap: 24px; flex: 1; align-items: stretch">
-                <div class="pres-group-gauge-card" style="padding: 28px 20px; gap: 16px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center">
-                  <div class="pres-group-name" style="font-size:54px;font-weight:900;color:var(--accent-blue);letter-spacing:-.04em;line-height:1">${groupName}</div>
-                  <canvas id="${canvasGroupId}" width="160" height="160"></canvas>
-                  <div style="font-size:32px;font-weight:900;color:${effCol};letter-spacing:-.03em;line-height:1">${eff.toFixed(1)}%</div>
-                  <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">Efficiency</div>
-                  <div class="pres-group-status" style="color:${effCol};font-weight:700">${eff>=100?'✓ Target Met':eff>=90?'≈ On Target':'⚠ Below Target'}</div>
+              <div class="pres-group-hero-top">
+                ${presKpiCard('var(--accent-blue)','🏭','Shop Capacity (Daily)',fmt(shopCapacityDaily)+'/day','Max daily physical limit','Capacity','neutral')}
+                ${presKpiCard('var(--accent-cyan)','🤝','Modified Capacity (90%)',fmt(modifiedCapacityDaily)+'/day (90%)','90% of daily physical limit','Modified','neutral')}
+                <div class="pres-kpi-card" style="display: flex; flex-direction: column; gap: 8px; justify-content: center; height: 100%;">
+                  <div class="pres-kpi-accent" style="background: var(--accent-purple);"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                    <div class="pres-kpi-label" style="margin-bottom: 0;">📅 Monthly Loading Analysis</div>
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">
+                      Month Cap: ${fmt(monthCapacityShop)} (Shop) | ${fmt(monthCapacityModified)} (Mod)
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                      <div class="pres-kpi-label" style="font-size: 9px; color: var(--text-muted); margin-bottom: 4px;">w.r.t Shop Capacity</div>
+                      <div class="pres-kpi-value" style="color: var(--accent-purple); font-size: 24px; line-height: 1.1;">${monthLoadingPctShop.toFixed(1)}%</div>
+                      <div style="font-size: 10px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 4px; line-height: 1.2;">
+                        Calc: ${fmt(monthLoading)} / (${fmt(shopCapacityDaily)} × ${workingDays})
+                      </div>
+                    </div>
+                    <div>
+                      <div class="pres-kpi-label" style="font-size: 9px; color: var(--text-muted); margin-bottom: 4px;">w.r.t Modified Cap</div>
+                      <div class="pres-kpi-value" style="color: var(--accent-amber); font-size: 24px; line-height: 1.1;">${monthLoadingPctModified.toFixed(1)}%</div>
+                      <div style="font-size: 10px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 4px; line-height: 1.2;">
+                        Calc: ${fmt(monthLoading)} / (${fmt(modifiedCapacityDaily)} × ${workingDays})
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="pres-kpi-grid" style="align-content:stretch; gap: 24px; --pres-kpi-padding: 28px 30px; --pres-kpi-value-size: 42px; --pres-kpi-label-size: 12px; --pres-kpi-sub-size: 13px; --pres-kpi-icon-size: 32px">
-                  ${presKpiCard('var(--accent-blue)','🏭','Daily Capacity',fmt(capPerDay)+'/day','Max physical capacity limit','Capacity','neutral')}
+              </div>
+              <div class="pres-group-hero-bottom">
+                <div class="pres-group-gauge-card" style="padding: 24px 20px; gap: 12px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center">
+                  <div class="pres-group-name" style="font-size:48px;font-weight:900;color:var(--accent-blue);letter-spacing:-.04em;line-height:1;margin-bottom:4px;">${groupName}</div>
+                  <canvas id="${canvasGroupId}" width="150" height="150"></canvas>
+                  <div style="font-size:28px;font-weight:900;color:${effCol};letter-spacing:-.03em;line-height:1;margin-top:4px;">${eff.toFixed(1)}%</div>
+                  <div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">Efficiency</div>
+                  <div class="pres-group-status" style="color:${effCol};font-weight:700;font-size:12px;">${eff>=100?'✓ Target Met':eff>=90?'≈ On Target':'⚠ Below Target'}</div>
+                </div>
+                <div class="pres-kpi-grid-5">
                   ${presKpiCard('var(--accent-cyan)','🎯','Target Volume',fmt(targetVol),`Target for ${workingDays} days`,'Target Vol','neutral')}
                   ${presKpiCard('var(--accent-green)','🏆','Actual Output',fmt(actualVol),'Completed during period',eBadge,eClass)}
                   ${presKpiCard('var(--accent-purple)','📊','Rolling Target',fmt(capRow.target_till_date),'Target till date (Excel)','Rolling','neutral')}
                   ${presKpiCard(balance===0?'var(--accent-green)':'var(--accent-amber)','⚖️','Balance Target',balance===0?'✓ Met':fmt(balance),'Remaining target volume',balance===0?'Met':'Remaining',balance===0?'up':'neutral')}
-                  ${presKpiCard('var(--accent-amber)','⚙️','Required Rate',fmt(reqRate)+'/day',lackingRate>0?`Planned + lacking (+${fmt(lackingRate)}/d)`:'Planned rate (no lacking nos)','Req Rate','neutral')}
+                  <div style="grid-column: span 2;">
+                    ${presKpiCard('var(--accent-amber)','⚙️','Required Rate',fmt(reqRate)+'/day',lackingRate>0?`Planned + lacking (+${fmt(lackingRate)}/d)`:'Planned rate (no lacking nos)','Req Rate','neutral')}
+                  </div>
                 </div>
               </div>`,
             initChartsFn: () => {
@@ -4657,9 +4878,9 @@
           legend: { display: false },
           datalabels: {
             display: true,
-            color: c.tickColor,
+            color: currentTheme === 'light' ? '#000000' : '#ffffff',
             anchor: 'end', align: 'top', offset: -2,
-            font: { weight: '700', size: 9, family: 'Inter, sans-serif' },
+            font: { weight: '800', size: 12, family: 'Inter, sans-serif' },
             formatter: v => { if (v===null||v===undefined) return ''; const n=typeof v==='object'?(v.y??0):v; return fmt(n); }
           },
           tooltip: { backgroundColor:c.tooltipBg,borderColor:c.tooltipBorder,borderWidth:1,titleColor:c.textPrimary,bodyColor:c.tickColor,padding:12,cornerRadius:10,callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.y??0).toLocaleString()}`} }
