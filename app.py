@@ -765,6 +765,21 @@ def index():
 
 @app.route('/api/meta')
 def meta():
+    """Return filter metadata for dashboard controls.
+
+    Query Parameters:
+        None
+
+    Returns:
+        flask.Response: JSON object with:
+            - dates (list[str]): Distinct production dates in YYYY-MM-DD format.
+            - months (list[str]): Distinct months in YYYY-MM format.
+            - groups (list[str]): Distinct assembly groups.
+            - models (list[str]): Distinct model names (first 300 values).
+            - month_weeks (dict[str, list[dict[str, object]]]): Week buckets per month.
+            - coverage (dict[str, list[str]]): Source-month availability for output/input.
+            - last_updated (str): ISO timestamp when metadata was generated.
+    """
     data = load_data()
     output = data.get('output', [])
     inp    = data.get('input', [])
@@ -824,6 +839,23 @@ def meta():
 
 @app.route('/api/production')
 def production():
+    """Return production KPIs and charts for selected filters.
+
+    Query Parameters:
+        date (str): "month"/"all", YYYY-MM, or YYYY-MM-DD. Defaults to "month".
+        shift (str): Shift selector ("all", "1", "2", "general"). Defaults to "all".
+        model (str): Model filter. Defaults to "all".
+        group (str): Group filter. Defaults to "all".
+        dates (str): Optional comma-separated YYYY-MM-DD list for explicit date filtering.
+        working_days (str): Optional numeric override for working-day calculations.
+
+    Returns:
+        flask.Response: JSON object with:
+            - timeline (dict[str, object]): Date-wise input/output trend and month coverage.
+            - groupwise (dict[str, object]): Group labels, actuals, targets, input, till-date.
+            - flow (dict[str, float]): Target/actual aggregates and percentage metrics.
+            - capacity_detail (list[dict[str, float]]): Capacity rows after filter adjustments.
+    """
     data = load_data()
     date_f  = request.args.get('date',  'month')
     shift_f = request.args.get('shift', 'all')
@@ -1052,6 +1084,18 @@ def fta_detail():
 
 @app.route('/api/quality')
 def quality():
+    """Return FTA quality metrics aggregated overall and by group.
+
+    Query Parameters:
+        group (str): Group filter ("all"/specific group). Defaults to "all".
+        date (str): Month/date filter ("month"/"all"/YYYY-MM[/DD]). Defaults to "month".
+        week (str): Optional week filter (for example "W1" or "Week 1").
+
+    Returns:
+        flask.Response: JSON object with:
+            - overall (dict[str, float]): Overall FTA%, acceptance, rejection, and rework totals.
+            - groupwise (dict[str, object]): Group labels and per-group quality measures.
+    """
     data = load_data()
     group_f = request.args.get('group', 'all')
     date_f  = request.args.get('date',  'month')
@@ -1121,6 +1165,21 @@ def quality():
 
 @app.route('/api/inventory')
 def api_inventory():
+    """Return inventory, WIP flow, and material usage summaries.
+
+    Query Parameters:
+        date (str): "month"/"all", YYYY-MM, or YYYY-MM-DD. Defaults to "month".
+        group (str): Group filter ("all"/specific group). Defaults to "all".
+        model (str): Model filter. Defaults to "all".
+        dates (str): Optional comma-separated YYYY-MM-DD list for explicit date filtering.
+
+    Returns:
+        flask.Response: JSON object with:
+            - timeline (dict[str, list[int] | list[str]]): Daily input/output/WIP trend.
+            - groupwise (list[dict[str, int | float | str]]): Per-group flow and material stats.
+            - flow (dict[str, int | float]): Aggregated inventory flow totals.
+            - materials (dict[str, object]): Material totals split by regular/add-on groups.
+    """
     inv = load_inventory_data()
     if not inv:
         return jsonify({'error': 'Inventory data not loaded'}), 500
@@ -1296,6 +1355,14 @@ def api_inventory():
 
 @app.route('/api/refresh')
 def refresh():
+    """Clear in-memory caches and force reload of workbook-backed datasets.
+
+    Query Parameters:
+        None
+
+    Returns:
+        flask.Response: JSON object with refresh status and request-time ISO timestamp.
+    """
     global _last_modified, _inventory_last_modified, _fta_detail_last_modified
     _last_modified = 0
     _inventory_last_modified = 0
