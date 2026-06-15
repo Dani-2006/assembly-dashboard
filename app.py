@@ -685,7 +685,6 @@ def load_fta_detail():
 
 
 def watch_file():
-    global _last_modified, _inventory_last_modified, _fta_detail_last_modified
     while True:
         try:
             mtime = os.path.getmtime(EXCEL_PATH)
